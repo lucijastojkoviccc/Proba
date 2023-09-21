@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "334116077413",
+    "project_id": "petfinder-b71be",
+    "storage_bucket": "petfinder-b71be.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:334116077413:android:8e4382a4a86b36fbc86b8c",
+        "android_client_info": {
+          "package_name": "elfak.mosis.petfinder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "334116077413-kbv0rjfrv8lum4jdqf7pje73d5v32j3m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-jLqY025mR7zamULWqp2aZfLNQoIY-_g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "334116077413-kbv0rjfrv8lum4jdqf7pje73d5v32j3m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/purple_200"
+    tools:context=".SecondFragment">
+
+    <RadioGroup
+        android:id="@+id/radio_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:padding="16dp"
+        android:background="@android:color/transparent">
+
+        <RadioButton
+            android:id="@+id/radio_my_posts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="My Posts"
+            android:checked="true"
+            android:buttonTint="@color/purple_500"/>
+
+        <RadioButton
+            android:id="@+id/radio_public"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Public"
+            android:buttonTint="@color/purple_500"/>
+    </RadioGroup>
+
+    <!-- Change the text color -->
+
+    <TextView
+        android:id="@+id/text_view_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:padding="16dp"
+
+        android:text="My Posts"
+        android:textColor="@color/purple_500"
+        android:textSize="38sp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/recycler_view"/>
+
+    <ListView
+        android:id="@+id/my_places_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="16dp" />
+
+</LinearLayout>

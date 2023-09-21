@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_main"
+    app:startDestination="@id/FirstFragment">
+
+    <fragment
+        android:id="@+id/FirstFragment"
+        android:name="elfak.mosis.petfinder.FirstFragment"
+        android:label="@string/first_fragment_label"
+        tools:layout="@layout/fragment_first">
+        <action
+            android:id="@+id/action_FirstFragment_to_SecondFragment"
+            app:destination="@id/SecondFragment"/>
+        <action
+            android:id="@+id/action_FirstFragment_to_EditFragment"
+            app:destination="@id/EditFragment"/>
+        <action
+            android:id="@+id/action_FirstFragment_to_MapFragment"
+            app:destination="@id/MapFragment"/>
+        <action
+            android:id="@+id/action_FirstFragment_to_fragmentEditProfile"
+            app:destination="@id/fragmentEditProfile"/>
+        <action
+            android:id="@+id/action_FirstFragment_to_UsersFragment"
+            app:destination="@id/UsersFragment"/>
+
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/fragmentEditProfile"
+        android:name="elfak.mosis.petfinder.FragmentEditProfile"
+        android:label="fragment_edit_profile"
+        tools:layout="@layout/fragment_edit_profile" >
+        <action
+            android:id="@+id/action_fragmentEditProfile_to_FirstFragment"
+            app:destination="@id/FirstFragment"
+            />
+        <action
+            android:id="@+id/action_fragmentEditProfile_to_SecondFragment"
+            app:destination="@id/SecondFragment"/>
+        <action
+            android:id="@+id/action_fragmentEditProfile_to_UsersFragment"
+            app:destination="@id/UsersFragment"/>
+        <action
+            android:id="@+id/action_fragmentEditProfile_to_MapFragment"
+            app:destination="@id/MapFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/EditFragment"
+        android:name="elfak.mosis.petfinder.EditFragment"
+        android:label="@string/edit_fragment_label"
+        tools:layout="@layout/fragment_edit">
+        <action
+            android:id="@+id/action_EditFragment_to_MapFragment"
+            app:destination="@id/MapFragment"
+            />
+        <action
+            android:id="@+id/action_EditFragment_to_SecondFragment"
+            app:destination="@id/SecondFragment"
+            />
+        <action
+            android:id="@+id/action_EditFragment_to_UsersFragment"
+            app:destination="@id/UsersFragment"
+            />
+
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/SecondFragment"
+        android:name="elfak.mosis.petfinder.SecondFragment"
+        android:label="@string/second_fragment_label"
+        tools:layout="@layout/fragment_second">
+
+<!--        <action-->
+<!--            android:id="@+id/action_SecondFragment_to_ViewFragment"-->
+<!--            app:destination="@id/ViewFragment"-->
+<!--            />-->
+        <action
+            android:id="@+id/action_SecondFragment_to_EditFragment"
+            app:destination="@id/EditFragment"
+           />
+        <action
+            android:id="@+id/action_SecondFragment_to_MapFragment"
+            app:destination="@id/MapFragment"
+            />
+        <action
+            android:id="@+id/action_SecondFragment_to_UsersFragment"
+            app:destination="@id/UsersFragment"
+            />
+        <action
+            android:id="@+id/action_SecondFragment_to_fragmentEditProfile"
+            app:destination="@id/fragmentEditProfile"
+            />
+    </fragment>
+
+
+
+    <!--    <action-->
+    <!--        android:id="@+id/action_EditFragment_to_FirstFragment"-->
+    <!--        app:destination="@id/FirstFragment" />-->
+
+    <!--    <action-->
+    <!--        android:id="@+id/action_EditFragment_to_SecondFragment"-->
+    <!--        app:destination="@id/SecondFragment" />-->
+
+<!--    <fragment-->
+<!--        android:id="@+id/ViewFragment"-->
+<!--        android:name="elfak.mosis.petfinder.ViewFragment"-->
+<!--        android:label="@string/view_fragment_label"-->
+<!--        tools:layout="@layout/fragment_view">-->
+<!--        <action-->
+<!--            android:id="@+id/action_ViewFragment_to_SecondFragment"-->
+<!--            app:destination="@id/SecondFragment"-->
+<!--           />-->
+<!--    </fragment>-->
+
+    <fragment
+        android:id="@+id/MapFragment"
+        android:name="elfak.mosis.petfinder.MapFragment"
+        android:label="@string/map_fragment_label"
+        tools:layout="@layout/fragment_map">
+        <action
+            android:id="@+id/action_MapFragment_to_EditFragment"
+            app:destination="@id/EditFragment"
+            />
+        <action
+            android:id="@+id/action_MapFragment_to_SecondFragment"
+            app:destination="@id/SecondFragment"
+            />
+        <action
+            android:id="@+id/action_MapFragment_to_UsersFragment"
+            app:destination="@id/UsersFragment"
+            />
+        <action
+            android:id="@+id/action_MapFragment_to_fragmentEditProfile"
+            app:destination="@id/fragmentEditProfile"
+            />
+    </fragment>
+    <fragment
+        android:id="@+id/UsersFragment"
+        android:name="elfak.mosis.petfinder.UsersFragment"
+        android:label="Users "
+        tools:layout="@layout/fragment_users">
+        <action
+            android:id="@+id/action_UsersFragment_to_MapFragment"
+            app:destination="@id/MapFragment"/>
+        <action
+            android:id="@+id/action_UsersFragment_to_SecondFragment"
+            app:destination="@id/SecondFragment"/>
+        <action
+            android:id="@+id/action_UsersFragment_to_EditFragment"
+            app:destination="@id/EditFragment"/>
+
+    </fragment>
+</navigation>

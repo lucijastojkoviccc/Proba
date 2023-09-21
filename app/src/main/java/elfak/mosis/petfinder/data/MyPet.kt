@@ -1,0 +1,7 @@
+package elfak.mosis.petfinder.data
+
+data class MyPet(var ID:String, var type: String, var breed: String, var color:String, var name:String, var picture:String, var description:String, var longitude: String, var latitude: String){
+
+    override fun toString(): String = name
+    }
+

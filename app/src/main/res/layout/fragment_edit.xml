@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".EditFragment" >
+
+    <!-- Type Field -->
+    <TextView
+        android:id="@+id/type_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Type:" />
+
+    <EditText
+        android:id="@+id/editmypet_type_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp" />
+
+    <!-- Breed Field -->
+    <TextView
+        android:id="@+id/breed_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Breed:" />
+
+    <EditText
+        android:id="@+id/editmypet_breed_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp" />
+
+    <!-- Color Field -->
+    <TextView
+        android:id="@+id/color_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Color:" />
+
+    <EditText
+        android:id="@+id/editmypet_color_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp" />
+
+    <!-- Name Field -->
+    <TextView
+        android:id="@+id/name_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Name:" />
+
+    <EditText
+        android:id="@+id/editmypet_name_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp" />
+    <!-- Picture Field -->
+    <TextView
+        android:id="@+id/picture_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Picture:" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <!--            android:background="@drawable/placeholder_image" />-->
+
+        <ImageView
+            android:id="@+id/editmypet_picture"
+            android:layout_width="170dp"
+            android:layout_height="170dp"
+            android:padding="55dp"
+            android:src="@drawable/baseline_add_a_photo_24" />
+
+        <Button
+            android:id="@+id/editmypet_select_picture_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginLeft="20dp"
+            android:text="Select" />
+    </LinearLayout>
+    <!-- Description Field -->
+    <TextView
+        android:id="@+id/description_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Description:" />
+
+    <EditText
+        android:id="@+id/editmypet_desc_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="bottom"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="bottom"
+            android:orientation="vertical"
+            android:layout_weight="1">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView4"
+                android:text="@string/editmypet_longitude_label"/>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/editmypet_longitude_edit" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView5"
+                android:text="@string/editmypet_latitude_label"/>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/editmypet_latitude_edit" />
+<!--            <TextView-->
+<!--                android:id="@+id/address_label"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Address/Location:" />-->
+
+<!--            <EditText-->
+<!--                android:id="@+id/editmypet_address_edit"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:minHeight="48dp" />-->
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/editmypet_location_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="2"
+            android:text="@string/editmypet_button_set_coordinates" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="bottom">
+
+        <Button
+            android:id="@+id/editmypet_finished_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/editmypet_add_label" />
+
+        <Button
+            android:id="@+id/editmypet_cancel_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/editmypet_cancel_label" />
+    </LinearLayout>
+</LinearLayout>
+
+
+

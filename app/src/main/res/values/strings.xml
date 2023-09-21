@@ -1,0 +1,55 @@
+<resources>
+    <string name="app_name">PetFinder</string>
+    <string name="action_settings">Settings</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">Home</string>
+    <string name="second_fragment_label">Pets</string>
+    <string name="edit_fragment_label">Add</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="viewmypet_finished_label">Close</string>
+    <string name="editmypet_save_label">Save</string>
+    <string name="view_fragment_label">View my pet</string>
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="Start">Start</string>
+    <string name="show_map">Show Map</string>
+    <string name="new_place">New Place</string>
+    <string name="my_places_list">My Places List</string>
+    <string name="about">About</string>
+    <string name="about_text">
+        PetFinder is your ultimate companion in reuniting lost furry friends! With PetFinder, you can easily upload a photo of your missing pet or any animal you have spotted wandering the streets. Our app will pinpoint the exact location on the map and display the image, helping bring them back home!
+    </string>
+    <string name="title_activity_my_places_list">MyPlacesList</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="editmypet_longitude_label">Longitude:</string>
+    <string name="editmypet_latitude_label">Latitude:</string>
+    <string name="editmypet_button_set_coordinates">SET</string>
+    <string name="editmypet_add_label">Add</string>
+    <string name="editmypet_cancel_label">Cancel</string>
+    <string name="editmypet_desc_label">Description</string>
+    <string name="editmypet_name_label">Name</string>
+    <string name="map_fragment_label">Map</string>
+
+    <string name="email_input">Email</string>
+    <string name="password_input">Password</string>
+    <string name="log_in">Log in</string>
+    <string name="register">Register</string>
+    <string name="name_input">Name</string>
+    <string name="password_input_register">Password (min. 8 characters)</string>
+    <string name="confirm_pass">Confirm Password</string>
+    <string name="error">Error, try again</string>
+    <string name="message_not_verified">Mail is not verified, check your inbox</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="Hurray">Hurray</string>
+    <string name="registerTextHurray">You have registered successfully!</string>
+    <string name="GoBack">Go Back</string>
+    <string name="change_picture">Change picture</string>
+    <string name="description_input">Description</string>
+
+    <string name="logout_question">Are you sure you want to logout?</string>
+    <string name="title_activity_login">ActivityLogin</string>
+    <string name="db_coll_pets">pets</string>
+</resources>
