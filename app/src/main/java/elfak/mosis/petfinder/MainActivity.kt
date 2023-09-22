@@ -94,7 +94,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         mDrawer.closeDrawer(GravityCompat.START)
 
-       Firebase.auth.addIdTokenListener(com.google.firebase.auth.FirebaseAuth.IdTokenListener { finish() })
+       //Firebase.auth.addIdTokenListener(com.google.firebase.auth.FirebaseAuth.IdTokenListener { finish() })
 
     }
 
