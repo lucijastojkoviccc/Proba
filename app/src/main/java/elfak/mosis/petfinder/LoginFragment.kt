@@ -29,7 +29,7 @@ class LoginFragment : Fragment()
     private lateinit var binding: FragmentLoginBinding
     private var emailEntered = false
     private var passEntered = false
-    private lateinit var Auth: FirebaseAuth
+    private lateinit var auth: FirebaseAuth
     //private lateinit var firestore: FirebaseFirestore
     private var authStateListener: FirebaseAuth.AuthStateListener =
         FirebaseAuth.AuthStateListener { p0 ->
@@ -41,15 +41,15 @@ class LoginFragment : Fragment()
     {
         super.onCreate(savedInstanceState)
 
-        Auth = Firebase.auth
+        auth = Firebase.auth
         var firestore = Firebase.firestore
         var user = Firebase.auth.currentUser
         var db = Firebase.database
 
         ////////////////////////////////// BOZE POMOZI
 
-        var store = Firebase.storage
-        var storageRef = store.reference
+//        var store = Firebase.storage
+//        var storageRef = store.reference
 
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
@@ -96,28 +96,27 @@ class LoginFragment : Fragment()
 
              enableLogin()
     }
-    fun loadData(id: String) {
-        var name: String = ""
-        var email: String = ""
-        var description: String = ""
-        var numberOfLikes: Int = 0
-        var pets: ArrayList<MyPet> = ArrayList()
-
-
-        var pribavljanjePodataka = Firebase.firestore.collection("users").document(id).get()
-
-        pribavljanjePodataka.addOnSuccessListener {
-            name = (it["name"].toString())
-            email = (it["email"].toString())
-            description = (it["description"].toString())
-            //numberOfLikes=(it["numberOfLikes"].)
-            var lostPets = it["pets"] as ArrayList<MyPet>
-            for (pet in lostPets) {
-                pets.add(pet)
-            }
-        }
-    }
-
+//    fun loadData(id: String) {
+//        var name: String = ""
+//        var email: String = ""
+//        var description: String = ""
+//        //var points: Int = 0
+//        var pets: ArrayList<MyPet> = ArrayList()
+//
+//
+//        var pribavljanjePodataka = Firebase.firestore.collection("users").document(id).get()
+//
+//        pribavljanjePodataka.addOnSuccessListener {
+//            name = (it["name"].toString())
+//            email = (it["email"].toString())
+//            description = (it["description"].toString())
+//            //points=(it["points"].)
+//            var lostPets = it["pets"] as ArrayList<MyPet>
+//            for (pet in lostPets) {
+//                pets.add(pet)
+//            }
+//        }
+//    }
     private fun login(email:String, pass:String)
     {
         Firebase.auth.signInWithEmailAndPassword(email,pass).addOnCompleteListener {
@@ -129,10 +128,9 @@ class LoginFragment : Fragment()
                         Toast.makeText(context, R.string.message_not_verified, Toast.LENGTH_SHORT).show()
                     else
                     {
-                        var userID = Firebase.auth.currentUser!!.uid
-                        loadData(userID)
-
-                        //gotoMainActivity()
+                        gotoMainActivity()
+//                        var userID = Firebase.auth.currentUser!!.uid
+//                        loadData(userID)
                     }
 
                 }
@@ -165,6 +163,6 @@ class LoginFragment : Fragment()
     override fun onStart()
     {
         super.onStart()
-        Auth.addAuthStateListener(authStateListener)
+        auth.addAuthStateListener(authStateListener)
     }
 }

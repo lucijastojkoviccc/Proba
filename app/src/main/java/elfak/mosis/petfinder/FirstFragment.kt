@@ -32,6 +32,9 @@ class FirstFragment : Fragment() {
 //
 //    }
 
+    fun onLostPetClick(view: View) {
+        this.findNavController().navigate(R.id.action_FirstFragment_to_EditFragment)
+    }
      override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?

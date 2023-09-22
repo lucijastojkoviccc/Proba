@@ -52,4 +52,5 @@
     <string name="logout_question">Are you sure you want to logout?</string>
     <string name="title_activity_login">ActivityLogin</string>
     <string name="db_coll_pets">pets</string>
+    <string name="confirmLocation">Confirm</string>
 </resources>

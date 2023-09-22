@@ -49,30 +49,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     lateinit var navController: NavController
     private lateinit var mDrawer: DrawerLayout
     private lateinit var toggle: ActionBarDrawerToggle
-    private lateinit var binding: ActivityMainBinding //fuck mogao sam ovo da koristim lmaaaooooo
-    //private val shareViewModel : SharedViewHome by viewModels()
-
-        fun loadData(id: String) {
-            var name: String = ""
-            var email: String = ""
-            var description: String = ""
-            var numberOfLikes: Int = 0
-            var pets: ArrayList<MyPet> = ArrayList()
+    private lateinit var binding: ActivityMainBinding
+    private val shareViewModel : SharedViewHome by viewModels()
 
 
-            var pribavljanjePodataka = Firebase.firestore.collection("users").document(id).get()
-
-            pribavljanjePodataka.addOnSuccessListener {
-                name = (it["name"].toString())
-                email = (it["email"].toString())
-                description = (it["description"].toString())
-                //numberOfLikes=(it["numberOfLikes"].)
-                var lostPets = it["pets"] as ArrayList<MyPet>
-                for (pet in lostPets) {
-                    pets.add(pet)
-                }
-            }
-        }
 
 
 
@@ -86,8 +66,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         mDrawer = findViewById(R.id.drawer_layout)
 
-        navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.fragment_container) as NavHostFragment
+        navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_container) as NavHostFragment
         navController = navHostFragment.navController
         val navigationView: NavigationView = findViewById(R.id.nav_view)
         navigationView.setNavigationItemSelectedListener(this)
@@ -106,41 +85,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         var db = Firebase.firestore
         var dbb = Firebase.database
         var user = Firebase.auth.currentUser
-//        var userID = Firebase.auth.currentUser!!.uid
-//        loadData(userID)
+
 
         toggle.syncState()
         if (savedInstanceState == null) {
             navigationView.setCheckedItem(R.id.nav_posts)
         }
 
-        val headerLayout: View = navigationView.getHeaderView(0)
-        //val image: ImageView = headerLayout.findViewById(R.id.edit_image)                      /////////////// ja sam obirsala taj edit image jer mi nije delovao potrebno
+        mDrawer.closeDrawer(GravityCompat.START)
 
-//        Firebase.storage.getReference("profilePics/$userID.jpg").downloadUrl.addOnSuccessListener { uri ->
-//            //var ramZaSliku = headerLayout.findViewById<ImageView>(R.id.slika)
-//            //Glide.with(this).load(uri).into(ramZaSliku)
-//        }
-
-//        image.setOnClickListener {
-//            when (navController.currentDestination?.id) {
-////                R.id.fragmentSettings -> {
-////                    navController.navigate(R.id.action_fragmentSettings_to_fragmentEditProfile)
-////                }
-//                R.id.FirstFragment -> {
-//                    navController.navigate(R.id.action_FirstFragment_to_fragmentEditProfile)
-//                }
-//
-//
-//            }
-//            mDrawer.closeDrawer(GravityCompat.START)
-//        }
-
-
-
-        /////////////////// IZ NEKOG RAZLOGA SE SVE ZAGLUPAVI KAD POKUSAM DA IMPORTUJEM
-
-        Firebase.auth.addIdTokenListener(com.google.firebase.auth.FirebaseAuth.IdTokenListener { finish() })
+       Firebase.auth.addIdTokenListener(com.google.firebase.auth.FirebaseAuth.IdTokenListener { finish() })
 
     }
 

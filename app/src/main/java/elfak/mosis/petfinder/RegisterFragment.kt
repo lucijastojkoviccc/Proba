@@ -45,7 +45,7 @@ class RegisterFragment : Fragment()
             var name = binding.editTextRegisterName.text.toString()
             var email = binding.editTextRegisterEmail.text.toString()
             var pass = binding.editTextRegisterPassword.text.toString()
-            register(name, email, pass, numberOfLikes = 0)
+            register(name, email, pass) //, points = 0
         }
 
         binding.editTextRegisterEmail.addTextChangedListener(object : TextWatcher
@@ -95,7 +95,7 @@ class RegisterFragment : Fragment()
         enableRegister()
     }
 
-    private fun register(name: String, email: String, pass: String, numberOfLikes:Int)
+    private fun register(name: String, email: String, pass: String) //, numberOfLikes:Int
     {
         Firebase.auth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener {
             if(it.isSuccessful)
@@ -104,7 +104,7 @@ class RegisterFragment : Fragment()
                     "name" to name,
                     "email" to email,
                     "description" to null,
-                    "numberOfLikes" to numberOfLikes,
+                    //"points" to points,
                     "pets" to arrayListOf<String>()
                     )
 
@@ -118,6 +118,10 @@ class RegisterFragment : Fragment()
                     Firebase.firestore
                         .collection("users")
                         .add(korisnik)
+
+                Firebase.auth.currentUser?.sendEmailVerification()?.addOnCompleteListener {
+                    findNavController().navigate(R.id.frRegister_to_frRegHurray)
+                }
 
             }
         }
