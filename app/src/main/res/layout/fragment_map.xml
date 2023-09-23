@@ -7,32 +7,38 @@
     android:layout_height="match_parent"
     tools:context=".MapFragment">
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="622dp" />
+    <!--    <androidx.constraintlayout.widget.Guideline-->
+    <!--        android:id="@+id/guideline2"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:orientation="horizontal"-->
+    <!--        app:layout_constraintGuide_begin="622dp" />-->
+
 
     <org.osmdroid.views.MapView
         android:id="@+id/osmMapView"
-        titlesource="Mapnik"
+
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="570dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="115dp"
+        android:layout_marginBottom="46dp"
 
-    </org.osmdroid.views.MapView>
-
-    <android.widget.Button
-        android:id="@+id/buttonConfirmMapPosition"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="100dp"
-
-        android:text="@string/confirmLocation"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/guideline2" />
+        app:layout_constraintTop_toTopOf="parent">
+
+    </org.osmdroid.views.MapView>
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Confirm"
+        tools:layout_editor_absoluteX="154dp"
+        tools:layout_editor_absoluteY="34dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

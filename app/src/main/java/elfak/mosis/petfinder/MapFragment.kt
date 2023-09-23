@@ -1,13 +1,22 @@
 package elfak.mosis.petfinder
 
 
+import android.Manifest
+import android.content.ContentValues
 import android.content.Context
 import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.os.Bundle
+import android.util.Log
 import android.view.*
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -29,26 +38,25 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
 
 class MapFragment : Fragment() {
 
-    private val myPetViewModel: MyPetViewModel by activityViewModels()
-    private val locationViewModel: LocationViewModel by activityViewModels()
-    lateinit var map: MapView
     private lateinit var binding: FragmentMapBinding
+    lateinit var map: MapView
     private lateinit var myLocationOverlay: MyLocationNewOverlay
     private lateinit var mapController: IMapController
     private lateinit var startMarker: Marker
     private val sharedViewModel: SharedViewHome by activityViewModels()
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        setHasOptionsMenu(true)
-//    }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_main, menu)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private val locationPermissionRequest =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                startLocationTracking()
+            } else {
+                Toast.makeText(requireContext(), "Please allow GPS to track your location", Toast.LENGTH_SHORT).show()
+            }
+        }
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
+    {
         binding = FragmentMapBinding.inflate(layoutInflater)
         return binding.root
     }
@@ -58,27 +66,10 @@ class MapFragment : Fragment() {
         var context = activity?.applicationContext;
         Configuration.getInstance().load(context,PreferenceManager.getDefaultSharedPreferences(context!!))
         map = binding.osmMapView
-
-        binding.buttonConfirmMapPosition.visibility = View.GONE
-
-
-        binding.buttonConfirmMapPosition.setOnClickListener {
-            //podaci se setuju u onclick eventu
+        //binding.button.visibility = View.GONE
+        binding.button.setOnClickListener {
             findNavController().popBackStack()
         }
-
-
-//        if(ActivityCompat.checkSelfPermission(requireActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-//            ActivityCompat.checkSelfPermission(requireActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-//            requestPermissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
-//        else
-//        {
-//            setupMap()
-//        }
-
-//        map.controller.setZoom(15.0)
-//        val startPoint = GeoPoint(43.3209, 21.8958)
-//        map.controller.setCenter(startPoint)
 
         map.setMultiTouchControls(true)
         mapController = map.controller
@@ -87,116 +78,90 @@ class MapFragment : Fragment() {
         startMarker = Marker(map)
         startMarker.icon = ContextCompat.getDrawable(requireContext(),R.drawable.baseline_location_on_24)
         startMarker.infoWindow = null
-        if(sharedViewModel.longitude.value != null && sharedViewModel.latitude.value != null) {
-            startMarker.position =GeoPoint(sharedViewModel.latitude.value!!,
-                sharedViewModel.longitude.value!!)
-        }
-        else
-        {
-            startMarker.position = GeoPoint(44.0333, 20.8)
-        }
-        startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-        map.overlays.add(startMarker);
-        setOnMapClickOverlay()
-
-    }
-
-//    override fun onResume()
-//    {
-//        super.onResume()
-//        val toolbar: Toolbar = requireActivity().findViewById(R.id.toolbar)
-//        toolbar.visibility = View.GONE
-//        mapa.onResume()
-//    }
-//    private fun setMyLocationOverlay()
-//    {
-//        var myLocationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(activity), map)
-//        myLocationOverlay.enableMyLocation()
-//        map.overlays.add(myLocationOverlay)
-//    }
-//    private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission())
-//    { isGranted : Boolean ->
-//        if (isGranted)
-//        {
-//            setMyLocationOverlay()
-//            setOnMapClickOverlay()
+//        if(sharedViewModel.longitude.value != null && sharedViewModel.latitude.value != null) {
+//            startMarker.position = GeoPoint(sharedViewModel.latitude.value!!,
+//                sharedViewModel.longitude.value!!)
 //        }
-//    }
-//    private fun setupMap()
-//    {
-//        var startPoint = GeoPoint(43.3289,21.8958)
-//        map.controller.setZoom(15.0)
-//        if (locationViewModel.setLocation)
-//            setOnMapClickOverlay()
 //        else
 //        {
-//            if (myPetViewModel.selected != null)
-//                startPoint = GeoPoint(myPetViewModel.selected!!.latitude.toDouble(),myPetViewModel.selected!!.longitude.toDouble())
-//            else
-//                setMyLocationOverlay()
-//
+//            startMarker.position = GeoPoint(44.0333, 20.8)
 //        }
-//
-//        map.controller.animateTo(startPoint)
-//    }
-private fun setOnMapClickOverlay()
-{
-    var receive = object : MapEventsReceiver
+        startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+        map.overlays.add(startMarker);
+        //setOnMapClickOverlay()
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            locationPermissionRequest.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+        } else {
+            startLocationTracking()
+        }
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    }
+
+    override fun onResume()
     {
-        override fun singleTapConfirmedHelper(p: GeoPoint): Boolean
-        {
-            binding.buttonConfirmMapPosition.visibility = View.VISIBLE
-            map.overlays.remove(startMarker)
-            startMarker.position = GeoPoint(p!!.latitude, p!!.longitude)
-            startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-            map.overlays.add(startMarker);
-            sharedViewModel.latitude.value = p?.latitude
-            sharedViewModel.longitude.value = p?.longitude
-            return true
+        super.onResume()
+        val toolbar: Toolbar = requireActivity().findViewById(R.id.toolbar)
+        toolbar.visibility = View.GONE
+        map.onResume()
+    }
+    override fun onPause()
+    {
+        val toolbar: Toolbar = requireActivity().findViewById(R.id.toolbar)
+        toolbar.visibility = View.VISIBLE
+        super.onPause()
+        map.onPause()
+    }
+
+//    private fun setOnMapClickOverlay()
+//    {
+//        var receive = object : MapEventsReceiver
+//        {
+//            override fun singleTapConfirmedHelper(p: GeoPoint): Boolean
+//            {
+//                binding.button.visibility = View.VISIBLE
+//                map.overlays.remove(startMarker)
+//                startMarker.position = GeoPoint(p!!.latitude, p!!.longitude)
+//                startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+//                map.overlays.add(startMarker);
+//                sharedViewModel.latitude.value = p?.latitude
+//                sharedViewModel.longitude.value = p?.longitude
+//                return true
+//            }
+//            override fun longPressHelper(p: GeoPoint?): Boolean { return false }
+//        }
+//        var overlayEvents = MapEventsOverlay(receive)
+//        map.overlays.add(overlayEvents)
+//    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private fun startLocationTracking() {
+        val locationManager =
+            requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val locationListener = object : LocationListener {
+            override fun onLocationChanged(location: Location) {
+                val latitude = location.latitude
+                val longitude = location.longitude
+
+                // Update your UI with the new location
+                // For example, you can update 'startMarker' position here
+                startMarker.position = GeoPoint(latitude, longitude)
+            }
+
+            override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
+            override fun onProviderEnabled(provider: String) {}
+            override fun onProviderDisabled(provider: String) {}
         }
 
-        override fun longPressHelper(p: GeoPoint?): Boolean { return false }
+        locationManager.requestLocationUpdates(
+            LocationManager.GPS_PROVIDER,
+            1000,
+            10f,
+            locationListener
+        )
     }
-    var overlayEvents = MapEventsOverlay(receive)
-    map.overlays.add(overlayEvents)
-}
-
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean
-//    {
-//        return when (item.itemId)
-//        {
-//            R.id.action_new_place ->
-//            {
-//                this.findNavController().navigate(R.id.action_MapFragment_to_EditFragment)
-//                true
-//            }
-//            else -> super.onOptionsItemSelected(item)
-//        }
-//    }
-
-//    override fun onPrepareOptionsMenu(menu: Menu)
-//    {
-//        super.onPrepareOptionsMenu(menu)
-//        var item=menu.findItem(R.id.my_places_list)
-//        item.isVisible=false;
-//        item=menu.findItem(R.id.action_show_map)
-//        item.isVisible=false;
-//
-////        menu.findItem(R.id.action_my_places_list).isVisible = false
-////        menu.findItem(R.id.action_show_map).isVisible = false
-//    }
-//
-//    override fun onResume()
-//    {
-//        super.onResume()
-//        map.onResume()
-//    }
-//
-//    override fun onPause()
-//    {
-//        super.onPause()
-//        map.onPause()
-//    }
-
-
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
