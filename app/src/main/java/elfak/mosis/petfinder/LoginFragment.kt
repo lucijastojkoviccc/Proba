@@ -97,7 +97,7 @@ class LoginFragment : Fragment()
         var name: String = ""
         var email: String = ""
         var description: String = ""
-        //var points: Int = 0
+        var points: Int = 0
         var pets: ArrayList<MyPet> = ArrayList()
 
 
@@ -107,7 +107,7 @@ class LoginFragment : Fragment()
             name = (it["name"].toString())
             email = (it["email"].toString())
             description = (it["description"].toString())
-            //points=(it["points"].)
+            points=(it["points"] as Int)
             var lostPets = it["pets"] as ArrayList<MyPet>
             for (pet in lostPets) {
                 pets.add(pet)

@@ -63,15 +63,7 @@ class FragmentEditProfile : Fragment()
             navigation.getMenu().getItem(i).setChecked(false)
 
         title.text = "Edit Profile"
-//        val buttonNotification: ImageView = requireActivity().findViewById(R.id.notification_toolbar)
-//        val buttonFriend: ImageView = requireActivity().findViewById(R.id.addFriend_toolbar)
-
-//        buttonFriend.visibility = View.GONE
-//        buttonNotification.visibility = View.GONE
     }
-
-
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
         binding = FragmentEditProfileBinding.inflate(layoutInflater)
@@ -80,13 +72,13 @@ class FragmentEditProfile : Fragment()
 
     private fun fillData()
     {
-        //get ako nema internera ce da pokupi iz kesa podatke
+
         var id = Firebase.auth.currentUser!!.uid
         Firebase.firestore.collection("users").document(id).get().addOnSuccessListener {
             binding.editTextEditProfileName.setText(it["name"].toString())
             binding.editTextEditProfileEmail.setText(it["email"].toString())
             binding.editTextEditProfileDescription.setText(it["description"]?.toString())
-            binding.brojLajkova.setText(it["points"] as Int)
+            binding.points.setText((it["points"] as Long).toString())
         }
 
         if (checkInternetConnection())
@@ -104,28 +96,11 @@ class FragmentEditProfile : Fragment()
         var manager = requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         return manager.activeNetworkInfo?.isConnectedOrConnecting == true
     }
-
-    private fun loadLocalProfilePicture()
-    {
-        try
-        {
-            var putanja = Environment.getExternalStorageDirectory().toString()
-            var fajl = File(putanja, "accImage")
-            var inputStream = FileInputStream(fajl)
-            binding.profileImage.setImageBitmap(BitmapFactory.decodeStream(inputStream))
-            binding.imgUser.isVisible = false
-            inputStream.close()
-        }
-        catch (e:Exception)
-        {
-            Log.d("PetFinder", e.message.toString())
-        }
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?)
     {
         super.onViewCreated(view, savedInstanceState)
 
+        fillData()
         val btnImage = binding.profileImage
         btnImage.setOnClickListener{
             dispatchTakePictureIntent()
@@ -138,13 +113,11 @@ class FragmentEditProfile : Fragment()
             enableEdit()
         }
 
-        fillData()
 
         binding.button.setOnClickListener {
             var name = binding.editTextEditProfileName.text.toString()
             var email = binding.editTextEditProfileEmail.text.toString()
             var desc = binding.editTextEditProfileDescription.text.toString()
-
 
             binding.profileImage.isDrawingCacheEnabled = true
             binding.profileImage.buildDrawingCache()
@@ -209,6 +182,7 @@ class FragmentEditProfile : Fragment()
             var newDoc = hashMapOf<String, Any>(
                 "name" to name,
                 "email" to email,
+                "description" to desc,
                 "description" to desc
             )
             Firebase.firestore

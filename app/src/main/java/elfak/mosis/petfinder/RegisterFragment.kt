@@ -1,5 +1,6 @@
 package elfak.mosis.petfinder
 
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -38,50 +39,6 @@ class RegisterFragment : Fragment()
         return binding.root
     }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//    private fun login(email:String, pass:String)
-//    {
-//        Firebase.auth.signInWithEmailAndPassword(email,pass).addOnCompleteListener {
-//            when(it.isSuccessful)
-//            {
-//                true ->{
-//                    var userID = Firebase.auth.currentUser!!.uid
-//                    loadData(userID)
-//                    gotoMainActivity()}
-//                else -> Toast.makeText(context, R.string.error, Toast.LENGTH_SHORT).show()
-//            }
-//        }
-//    }
-    fun loadData(id: String) {
-        var name: String = ""
-        var email: String = ""
-        var description: String = ""
-        //var points: Int = 0
-        var pets: ArrayList<MyPet> = ArrayList()
-
-
-        var pribavljanjePodataka = Firebase.firestore.collection("users").document(id).get()
-
-        pribavljanjePodataka.addOnSuccessListener {
-            name = (it["name"].toString())
-            email = (it["email"].toString())
-            description = (it["description"].toString())
-            //points=(it["points"].)
-            var lostPets = it["pets"] as ArrayList<MyPet>
-            for (pet in lostPets) {
-                pets.add(pet)
-            }
-        }
-    }
-    private fun gotoMainActivity()
-    {
-        var i = Intent(context, MainActivity::class.java)
-        startActivity(i)
-    }
-
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     override fun onViewCreated(view: View, savedInstanceState: Bundle?)
     {
         super.onViewCreated(view, savedInstanceState)
@@ -94,22 +51,8 @@ class RegisterFragment : Fragment()
             var name = binding.editTextRegisterName.text.toString()
             var email = binding.editTextRegisterEmail.text.toString()
             var pass = binding.editTextRegisterPassword.text.toString()
-            register(name, email, pass, points = 0)
-            ////////////////////
-            //login(email, pass)
-            ////////////////////
+            register(name, email, pass, 1)
         }
-
-        binding.editTextRegisterEmail.addTextChangedListener(object : TextWatcher
-        {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun afterTextChanged(p0: Editable?)
-            {
-                emailEntered = android.util.Patterns.EMAIL_ADDRESS.matcher(p0).matches()
-                enableRegister()
-            }
-        })
 
         binding.editTextRegisterName.addTextChangedListener(object : TextWatcher
         {
@@ -118,6 +61,16 @@ class RegisterFragment : Fragment()
             override fun afterTextChanged(p0: Editable?)
             {
                 nameEntered = p0?.isNotEmpty() ?: false
+                enableRegister()
+            }
+        })
+        binding.editTextRegisterEmail.addTextChangedListener(object : TextWatcher
+        {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun afterTextChanged(p0: Editable?)
+            {
+                emailEntered = android.util.Patterns.EMAIL_ADDRESS.matcher(p0).matches()
                 enableRegister()
             }
         })
@@ -147,38 +100,36 @@ class RegisterFragment : Fragment()
         enableRegister()
     }
 
-    private fun register(name: String, email: String, pass: String, points:Int) //, numberOfLikes:Int
+    private fun register(name: String, email: String, pass: String, points:Long)
     {
         Firebase.auth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener {
             if(it.isSuccessful)
             {
+
                 var korisnik = hashMapOf(
                     "name" to name,
                     "email" to email,
-                    "description" to null,
-                    "points" to points,
-                    "pets" to arrayListOf<String>()  //niz stringova koji su zapravo ID MyPet
-                    )
+                    "points" to Int,
+                    "pets" to arrayListOf<String>())
 
                 if(Firebase.auth.currentUser?.uid?.isNotEmpty() == true)
                 {
-                    Firebase.firestore
-                        .collection("users")
-                        .document(Firebase.auth.currentUser!!.uid)
+                    korisnik["points"]=1
+
+                    Log.d(TAG, korisnik["name"].toString())
+                    Log.d(TAG, korisnik["email"].toString())
+                    Log.d(TAG, korisnik["points"].toString())
+                    //Toast.makeText(requireContext(),"uslo",Toast.LENGTH_SHORT).show()
+                        Firebase.firestore
+                        .collection("users").document(Firebase.auth.currentUser!!.uid)
                         .set(korisnik)
-                    //////////////////
-                    var userID = Firebase.auth.currentUser!!.uid
-                    loadData(userID)
-                    gotoMainActivity()
-                    ////////////////////
-
-                }
-
-                else
-                    Firebase.firestore
+                            .addOnSuccessListener { Toast.makeText(requireContext(),"oce",Toast.LENGTH_SHORT).show() }
+                 }
+                else {
+                         Firebase.firestore
                         .collection("users")
                         .add(korisnik)
-
+                }
             }
         }
     }

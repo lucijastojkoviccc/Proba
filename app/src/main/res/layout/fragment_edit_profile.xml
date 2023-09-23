@@ -9,7 +9,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:paddingBottom="40dp">
 
         <com.google.android.material.imageview.ShapeableImageView
@@ -135,7 +135,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.24" />
+            app:layout_constraintGuide_percent="0.22" />
 
         <EditText
             android:id="@+id/editText_edit_profile_description"
@@ -166,35 +166,36 @@
             app:layout_constraintBottom_toTopOf="@id/editText_edit_profile_description"
             app:layout_constraintStart_toStartOf="@id/editText_edit_profile_description" />
 
-<!--        <ImageView-->
-<!--            android:id="@+id/imageView2"-->
-<!--            android:layout_width="48dp"-->
-<!--            android:layout_height="48dp"-->
-<!--            android:layout_marginStart="306dp"-->
-<!--            android:layout_marginTop="38dp"-->
-<!--            android:layout_marginEnd="57dp"-->
-<!--            android:layout_marginBottom="528dp"-->
-<!--            android:src="@drawable/baseline_favorite_border_24"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintHorizontal_bias="1.0"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toTopOf="parent"-->
-<!--            app:layout_constraintVertical_bias="0.225" />-->
+        <!--        <ImageView-->
+        <!--            android:id="@+id/imageView2"-->
+        <!--            android:layout_width="48dp"-->
+        <!--            android:layout_height="48dp"-->
+        <!--            android:layout_marginStart="306dp"-->
+        <!--            android:layout_marginTop="38dp"-->
+        <!--            android:layout_marginEnd="57dp"-->
+        <!--            android:layout_marginBottom="528dp"-->
+        <!--            android:src="@drawable/baseline_favorite_border_24"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintHorizontal_bias="1.0"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toTopOf="parent"-->
+        <!--            app:layout_constraintVertical_bias="0.225" />-->
 
         <TextView
-            android:id="@+id/broj_lajkova"
+            android:id="@+id/points"
             android:layout_width="75dp"
             android:layout_height="25dp"
-            android:layout_marginTop="93dp"
-            android:layout_marginBottom="496dp"
+            android:layout_marginStart="296dp"
+            android:layout_marginTop="38dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginBottom="551dp"
             android:text="TextView"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.852"
-            app:layout_constraintStart_toStartOf="@+id/profile_image"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="0.225" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

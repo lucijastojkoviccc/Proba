@@ -57,22 +57,31 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         var name: String = ""
         var email: String = ""
         var description: String = ""
-        var points: Int = 0
+        var points: Long = 1
         var pets: ArrayList<String> = ArrayList()
 
 
         var pribavljanjePodataka = Firebase.firestore.collection("users").document(id).get()
 
+
         pribavljanjePodataka.addOnSuccessListener {
             name = (it["name"].toString())
             email = (it["email"].toString())
             description = (it["description"].toString())
-            points=(it["points"] as Int)
-            var lostPets = it["pets"] as ArrayList<String>
-            if(!lostPets.isEmpty())
-                for (pet in lostPets) {
-                    pets.add(pet)
-                }
+            var tmp= it["points"]
+            if(tmp!=null)
+                points= tmp as Long
+
+            var lostPetsss = it["pets"]
+            if(lostPetsss!=null)
+            {
+               var lostPets= lostPetsss as ArrayList<String>
+                if(!lostPets.isEmpty())
+                    for (pet in lostPets) {
+                        pets.add(pet)
+                    }
+            }
+
         }
     }
 
