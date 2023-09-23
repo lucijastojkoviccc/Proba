@@ -44,7 +44,7 @@ class SecondFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val myPetsList: ListView = requireView().findViewById<ListView>(R.id.my_places_list)
-        myPetViewModel.myPetsList.add(MyPet("", "", "", "", "", "", "", "", ""))
+        myPetViewModel.myPetsList.add(MyPet("", "", "", "", "", "", "", "", "",""))
         myPetsList.adapter = ArrayAdapter<MyPet>(
             view.context,
             android.R.layout.simple_list_item_1,

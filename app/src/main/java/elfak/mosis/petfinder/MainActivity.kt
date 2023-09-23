@@ -3,6 +3,7 @@ package elfak.mosis.petfinder
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
@@ -52,7 +53,28 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var binding: ActivityMainBinding
     private val shareViewModel : SharedViewHome by viewModels()
 
+    fun loadData(id: String) {
+        var name: String = ""
+        var email: String = ""
+        var description: String = ""
+        var points: Int = 0
+        var pets: ArrayList<String> = ArrayList()
 
+
+        var pribavljanjePodataka = Firebase.firestore.collection("users").document(id).get()
+
+        pribavljanjePodataka.addOnSuccessListener {
+            name = (it["name"].toString())
+            email = (it["email"].toString())
+            description = (it["description"].toString())
+            points=(it["points"] as Int)
+            var lostPets = it["pets"] as ArrayList<String>
+            if(!lostPets.isEmpty())
+                for (pet in lostPets) {
+                    pets.add(pet)
+                }
+        }
+    }
 
 
 
@@ -85,6 +107,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         var db = Firebase.firestore
         var dbb = Firebase.database
         var user = Firebase.auth.currentUser
+        if(user!=null)
+        {
+            var userID = Firebase.auth.currentUser!!.uid
+            loadData(userID)
+        }
 
 
         toggle.syncState()
@@ -94,9 +121,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         mDrawer.closeDrawer(GravityCompat.START)
 
-       //Firebase.auth.addIdTokenListener(com.google.firebase.auth.FirebaseAuth.IdTokenListener { finish() })
-
+        val headerLayout: View = navigationView.getHeaderView(0)
+        val image: ImageView = headerLayout.findViewById(R.id.slika)
     }
+
 
     override fun onBackPressed() {
         if (mDrawer.isDrawerOpen(GravityCompat.START))
@@ -201,6 +229,7 @@ override fun onNavigationItemSelected(item: MenuItem): Boolean
         }
 
              R.id.nav_logout ->
+
         {
             val navigation: NavigationView = findViewById(R.id.nav_view)
             for (i in 0 until navigation.getMenu().size())
@@ -221,6 +250,7 @@ override fun onNavigationItemSelected(item: MenuItem): Boolean
                 .setNegativeButton("No") {p0, p1 -> }
                 .show()
         }
+
     }
     mDrawer.closeDrawer(GravityCompat.START)
     return true
@@ -246,4 +276,5 @@ override fun onNavigationItemSelected(item: MenuItem): Boolean
 
 
     }
+
 }

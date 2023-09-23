@@ -1,19 +1,25 @@
 package elfak.mosis.petfinder
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.auth.EmailAuthProvider
 
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import elfak.mosis.petfinder.R
+import elfak.mosis.petfinder.data.MyPet
 import elfak.mosis.petfinder.databinding.FragmentRegisterBinding
 
 class RegisterFragment : Fragment()
@@ -32,11 +38,54 @@ class RegisterFragment : Fragment()
         return binding.root
     }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//    private fun login(email:String, pass:String)
+//    {
+//        Firebase.auth.signInWithEmailAndPassword(email,pass).addOnCompleteListener {
+//            when(it.isSuccessful)
+//            {
+//                true ->{
+//                    var userID = Firebase.auth.currentUser!!.uid
+//                    loadData(userID)
+//                    gotoMainActivity()}
+//                else -> Toast.makeText(context, R.string.error, Toast.LENGTH_SHORT).show()
+//            }
+//        }
+//    }
+    fun loadData(id: String) {
+        var name: String = ""
+        var email: String = ""
+        var description: String = ""
+        //var points: Int = 0
+        var pets: ArrayList<MyPet> = ArrayList()
+
+
+        var pribavljanjePodataka = Firebase.firestore.collection("users").document(id).get()
+
+        pribavljanjePodataka.addOnSuccessListener {
+            name = (it["name"].toString())
+            email = (it["email"].toString())
+            description = (it["description"].toString())
+            //points=(it["points"].)
+            var lostPets = it["pets"] as ArrayList<MyPet>
+            for (pet in lostPets) {
+                pets.add(pet)
+            }
+        }
+    }
+    private fun gotoMainActivity()
+    {
+        var i = Intent(context, MainActivity::class.java)
+        startActivity(i)
+    }
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     override fun onViewCreated(view: View, savedInstanceState: Bundle?)
     {
         super.onViewCreated(view, savedInstanceState)
-
-        binding.registerRegisterLogin.setOnClickListener {
+          binding.registerRegisterLogin.setOnClickListener {
             findNavController().popBackStack()
         }
 
@@ -45,7 +94,10 @@ class RegisterFragment : Fragment()
             var name = binding.editTextRegisterName.text.toString()
             var email = binding.editTextRegisterEmail.text.toString()
             var pass = binding.editTextRegisterPassword.text.toString()
-            register(name, email, pass) //, points = 0
+            register(name, email, pass, points = 0)
+            ////////////////////
+            //login(email, pass)
+            ////////////////////
         }
 
         binding.editTextRegisterEmail.addTextChangedListener(object : TextWatcher
@@ -95,7 +147,7 @@ class RegisterFragment : Fragment()
         enableRegister()
     }
 
-    private fun register(name: String, email: String, pass: String) //, numberOfLikes:Int
+    private fun register(name: String, email: String, pass: String, points:Int) //, numberOfLikes:Int
     {
         Firebase.auth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener {
             if(it.isSuccessful)
@@ -104,24 +156,28 @@ class RegisterFragment : Fragment()
                     "name" to name,
                     "email" to email,
                     "description" to null,
-                    //"points" to points,
-                    "pets" to arrayListOf<String>()
+                    "points" to points,
+                    "pets" to arrayListOf<String>()  //niz stringova koji su zapravo ID MyPet
                     )
 
                 if(Firebase.auth.currentUser?.uid?.isNotEmpty() == true)
+                {
                     Firebase.firestore
                         .collection("users")
                         .document(Firebase.auth.currentUser!!.uid)
                         .set(korisnik)
+                    //////////////////
+                    var userID = Firebase.auth.currentUser!!.uid
+                    loadData(userID)
+                    gotoMainActivity()
+                    ////////////////////
+
+                }
 
                 else
                     Firebase.firestore
                         .collection("users")
                         .add(korisnik)
-
-                Firebase.auth.currentUser?.sendEmailVerification()?.addOnCompleteListener {
-                    findNavController().navigate(R.id.frRegister_to_frRegHurray)
-                }
 
             }
         }
@@ -131,8 +187,10 @@ class RegisterFragment : Fragment()
     {
         if(nameEntered && emailEntered && passEntered)
         {
-            binding.registerRegisterButton.setBackgroundResource(R.id.guideline_register_registerButton)
-            binding.registerRegisterButton.isEnabled = true
+//            binding.registerRegisterButton.setBackgroundResource(R.id.register_registerButton)
+//            binding.registerRegisterButton.isEnabled = true
+            var reg = binding.registerRegisterButton
+            reg.isEnabled=true
         }
         else
         {

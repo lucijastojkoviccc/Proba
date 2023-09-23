@@ -98,27 +98,6 @@
             />
     </fragment>
 
-
-
-    <!--    <action-->
-    <!--        android:id="@+id/action_EditFragment_to_FirstFragment"-->
-    <!--        app:destination="@id/FirstFragment" />-->
-
-    <!--    <action-->
-    <!--        android:id="@+id/action_EditFragment_to_SecondFragment"-->
-    <!--        app:destination="@id/SecondFragment" />-->
-
-<!--    <fragment-->
-<!--        android:id="@+id/ViewFragment"-->
-<!--        android:name="elfak.mosis.petfinder.ViewFragment"-->
-<!--        android:label="@string/view_fragment_label"-->
-<!--        tools:layout="@layout/fragment_view">-->
-<!--        <action-->
-<!--            android:id="@+id/action_ViewFragment_to_SecondFragment"-->
-<!--            app:destination="@id/SecondFragment"-->
-<!--           />-->
-<!--    </fragment>-->
-
     <fragment
         android:id="@+id/MapFragment"
         android:name="elfak.mosis.petfinder.MapFragment"

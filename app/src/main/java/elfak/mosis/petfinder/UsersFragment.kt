@@ -25,6 +25,7 @@ class UsersFragment : Fragment(), UserListAdapter.Pomoc {
     lateinit var recycler: RecyclerView
     val sharedViewModel: SharedViewHome by activityViewModels()
 
+
     private lateinit var usersList: ListView
     private lateinit var radioGroup: RadioGroup
     private lateinit var radioButtonRanked: RadioButton

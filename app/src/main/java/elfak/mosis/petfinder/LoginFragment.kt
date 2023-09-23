@@ -1,5 +1,6 @@
 package elfak.mosis.petfinder
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -9,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.*
@@ -17,9 +19,7 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import elfak.mosis.petfinder.MainActivity
 
-import elfak.mosis.petfinder.R
 import elfak.mosis.petfinder.data.MyPet
 import elfak.mosis.petfinder.databinding.FragmentLoginBinding
 
@@ -33,7 +33,7 @@ class LoginFragment : Fragment()
     //private lateinit var firestore: FirebaseFirestore
     private var authStateListener: FirebaseAuth.AuthStateListener =
         FirebaseAuth.AuthStateListener { p0 ->
-            if (p0.currentUser != null && p0.currentUser!!.isEmailVerified )
+            if (p0.currentUser != null  )
                 gotoMainActivity()
         }
 
@@ -44,12 +44,9 @@ class LoginFragment : Fragment()
         auth = Firebase.auth
         var firestore = Firebase.firestore
         var user = Firebase.auth.currentUser
+        var store = Firebase.storage
         var db = Firebase.database
 
-        ////////////////////////////////// BOZE POMOZI
-
-//        var store = Firebase.storage
-//        var storageRef = store.reference
 
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
@@ -96,27 +93,27 @@ class LoginFragment : Fragment()
 
              enableLogin()
     }
-//    fun loadData(id: String) {
-//        var name: String = ""
-//        var email: String = ""
-//        var description: String = ""
-//        //var points: Int = 0
-//        var pets: ArrayList<MyPet> = ArrayList()
-//
-//
-//        var pribavljanjePodataka = Firebase.firestore.collection("users").document(id).get()
-//
-//        pribavljanjePodataka.addOnSuccessListener {
-//            name = (it["name"].toString())
-//            email = (it["email"].toString())
-//            description = (it["description"].toString())
-//            //points=(it["points"].)
-//            var lostPets = it["pets"] as ArrayList<MyPet>
-//            for (pet in lostPets) {
-//                pets.add(pet)
-//            }
-//        }
-//    }
+    fun loadData(id: String) {
+        var name: String = ""
+        var email: String = ""
+        var description: String = ""
+        //var points: Int = 0
+        var pets: ArrayList<MyPet> = ArrayList()
+
+
+        var pribavljanjePodataka = Firebase.firestore.collection("users").document(id).get()
+
+        pribavljanjePodataka.addOnSuccessListener {
+            name = (it["name"].toString())
+            email = (it["email"].toString())
+            description = (it["description"].toString())
+            //points=(it["points"].)
+            var lostPets = it["pets"] as ArrayList<MyPet>
+            for (pet in lostPets) {
+                pets.add(pet)
+            }
+        }
+    }
     private fun login(email:String, pass:String)
     {
         Firebase.auth.signInWithEmailAndPassword(email,pass).addOnCompleteListener {
@@ -124,14 +121,11 @@ class LoginFragment : Fragment()
             {
                 true ->
                 {
-                    if (Firebase.auth.currentUser?.isEmailVerified == false)
-                        Toast.makeText(context, R.string.message_not_verified, Toast.LENGTH_SHORT).show()
-                    else
-                    {
+                        var userID = Firebase.auth.currentUser!!.uid
+
+                        loadData(userID)
                         gotoMainActivity()
-//                        var userID = Firebase.auth.currentUser!!.uid
-//                        loadData(userID)
-                    }
+
 
                 }
                 else -> Toast.makeText(context, R.string.error, Toast.LENGTH_SHORT).show()
@@ -144,8 +138,10 @@ class LoginFragment : Fragment()
     {
         if (emailEntered && passEntered)
         {
-            binding.loginButton.setBackgroundResource(R.id.guideline_register_registerButton)
-            binding.loginButton.isEnabled = true
+//            binding.loginButton.setBackgroundResource(R.id.loginButton)
+//            binding.loginButton.isEnabled = true
+            var logg= binding.loginButton
+            logg.isEnabled=true
         }
         else
         {

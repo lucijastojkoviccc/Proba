@@ -14,6 +14,10 @@
             android:id="@+id/frLogin_to_frReg"
             app:destination="@id/RegisterFragment"
            />
+        <action
+            android:id="@+id/frLogin_to_FirstFragment"
+            app:destination="@id/FirstFragment"
+            />
     </fragment>
 
     <fragment
@@ -36,5 +40,9 @@
             android:id="@+id/frRegHurray_to_frLogin"
             app:destination="@id/LoginFragment"
         />
+        <action
+            android:id="@+id/frRegHurray_to_FirstFragment"
+            app:destination="@id/FirstFragment"
+            />
     </fragment>
 </navigation>

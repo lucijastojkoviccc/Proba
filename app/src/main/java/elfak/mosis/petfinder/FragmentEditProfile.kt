@@ -48,8 +48,6 @@ class FragmentEditProfile : Fragment()
 
     private lateinit var binding: FragmentEditProfileBinding
     private val REQUEST_IMAGE_CAPTURE = 1;
-    private var CAMERA_REQUEST_CODE = 0
-    private var GALLERY_REQUEST_CODE = 0
     private var selectedImageUri: Uri? = null
     private var formCheck:BooleanArray = BooleanArray(4)
 
@@ -86,9 +84,9 @@ class FragmentEditProfile : Fragment()
         var id = Firebase.auth.currentUser!!.uid
         Firebase.firestore.collection("users").document(id).get().addOnSuccessListener {
             binding.editTextEditProfileName.setText(it["name"].toString())
-            binding.editTextEditProfileEmail.setText(it["email"]?.toString())
+            binding.editTextEditProfileEmail.setText(it["email"].toString())
             binding.editTextEditProfileDescription.setText(it["description"]?.toString())
-            //binding.brojLajkova.setText(it["numberOfLikes"])
+            binding.brojLajkova.setText(it["points"] as Int)
         }
 
         if (checkInternetConnection())
