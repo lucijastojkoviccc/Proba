@@ -16,6 +16,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -45,8 +46,7 @@ class MapFragment : Fragment() {
     private lateinit var startMarker: Marker
     private val sharedViewModel: SharedViewHome by activityViewModels()
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private val locationPermissionRequest =
+ private val locationPermissionRequest =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if (isGranted) {
                 startLocationTracking()
@@ -54,8 +54,7 @@ class MapFragment : Fragment() {
                 Toast.makeText(requireContext(), "Please allow GPS to track your location", Toast.LENGTH_SHORT).show()
             }
         }
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
+ override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
         binding = FragmentMapBinding.inflate(layoutInflater)
         return binding.root
@@ -76,20 +75,13 @@ class MapFragment : Fragment() {
         map.controller.setZoom(8.5)
         map.controller.setCenter(GeoPoint(44.0333, 20.8))
         startMarker = Marker(map)
-        startMarker.icon = ContextCompat.getDrawable(requireContext(),R.drawable.baseline_location_on_24)
+        val d =
+            ResourcesCompat.getDrawable(resources, org.osmdroid.library.R.drawable.person, null)
+        startMarker.icon = d //ContextCompat.getDrawable(requireContext(),R.drawable.baseline_location_on_24)
         startMarker.infoWindow = null
-//        if(sharedViewModel.longitude.value != null && sharedViewModel.latitude.value != null) {
-//            startMarker.position = GeoPoint(sharedViewModel.latitude.value!!,
-//                sharedViewModel.longitude.value!!)
-//        }
-//        else
-//        {
-//            startMarker.position = GeoPoint(44.0333, 20.8)
-//        }
         startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
         map.overlays.add(startMarker);
-        //setOnMapClickOverlay()
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         if (ContextCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -99,7 +91,7 @@ class MapFragment : Fragment() {
         } else {
             startLocationTracking()
         }
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     }
 
     override fun onResume()
@@ -116,29 +108,7 @@ class MapFragment : Fragment() {
         super.onPause()
         map.onPause()
     }
-
-//    private fun setOnMapClickOverlay()
-//    {
-//        var receive = object : MapEventsReceiver
-//        {
-//            override fun singleTapConfirmedHelper(p: GeoPoint): Boolean
-//            {
-//                binding.button.visibility = View.VISIBLE
-//                map.overlays.remove(startMarker)
-//                startMarker.position = GeoPoint(p!!.latitude, p!!.longitude)
-//                startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-//                map.overlays.add(startMarker);
-//                sharedViewModel.latitude.value = p?.latitude
-//                sharedViewModel.longitude.value = p?.longitude
-//                return true
-//            }
-//            override fun longPressHelper(p: GeoPoint?): Boolean { return false }
-//        }
-//        var overlayEvents = MapEventsOverlay(receive)
-//        map.overlays.add(overlayEvents)
-//    }
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private fun startLocationTracking() {
+private fun startLocationTracking() {
         val locationManager =
             requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
         val locationListener = object : LocationListener {
@@ -163,5 +133,5 @@ class MapFragment : Fragment() {
             locationListener
         )
     }
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
