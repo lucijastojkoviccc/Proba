@@ -66,9 +66,9 @@ class MapFragment : Fragment() {
         Configuration.getInstance().load(context,PreferenceManager.getDefaultSharedPreferences(context!!))
         map = binding.osmMapView
         //binding.button.visibility = View.GONE
-        binding.button.setOnClickListener {
-            findNavController().popBackStack()
-        }
+//        binding.button.setOnClickListener {
+//            findNavController().popBackStack()
+//        }
 
         map.setMultiTouchControls(true)
         mapController = map.controller

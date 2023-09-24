@@ -28,6 +28,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
@@ -47,22 +48,34 @@ class FragmentEditProfile : Fragment()
 {
 
     private lateinit var binding: FragmentEditProfileBinding
+    private lateinit var dobijeniID: String
     private val REQUEST_IMAGE_CAPTURE = 1;
     private var selectedImageUri: Uri? = null
     private var formCheck:BooleanArray = BooleanArray(4)
 
-    override fun onResume()
-    {
+    override fun onResume() {
         super.onResume()
-        val title: TextView = requireActivity().findViewById(R.id.toolbar_title)
-        val navigation: NavigationView = requireActivity().findViewById(R.id.nav_view)
-        (activity as DrawerLocker?)!!.setDrawerEnabled(true)
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        setFragmentResultListener("requestKey") { key, bundle ->
+            val result = bundle.getString("data")
+            dobijeniID = result.toString()
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            val title: TextView = requireActivity().findViewById(R.id.toolbar_title)
+            val navigation: NavigationView = requireActivity().findViewById(R.id.nav_view)
+            (activity as DrawerLocker?)!!.setDrawerEnabled(true)
 
 
-        for (i in 0 until navigation.getMenu().size())
-            navigation.getMenu().getItem(i).setChecked(false)
+            for (i in 0 until navigation.getMenu().size())
+                navigation.getMenu().getItem(i).setChecked(false)
 
-        title.text = "Edit Profile"
+            title.text = "Edit Profile"
+            if(dobijeniID!=Firebase.auth.currentUser!!.uid)
+            {
+                binding.button.visibility=View.GONE
+                binding.textViewTakePicture.visibility=View.GONE
+            }
+
+        }
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
@@ -136,6 +149,8 @@ class FragmentEditProfile : Fragment()
             findNavController().popBackStack()
 
         }
+        binding.button2.setOnClickListener {  findNavController().popBackStack() }
+
 
         binding.editTextEditProfileName.addTextChangedListener(object : TextWatcher
         {
@@ -174,7 +189,7 @@ class FragmentEditProfile : Fragment()
         enableEdit()
     }
 
-    private fun changeUserData(name: String,email: String, desc: String, pic: ByteArray)
+    private fun changeUserData(name: String, email: String, desc: String, pic: ByteArray)
     {
         if(Firebase.auth.currentUser?.uid?.isNotEmpty() == true)
         {
@@ -182,9 +197,8 @@ class FragmentEditProfile : Fragment()
             var newDoc = hashMapOf<String, Any>(
                 "name" to name,
                 "email" to email,
-                "description" to desc,
                 "description" to desc
-            )
+                )
             Firebase.firestore
                 .collection("users")
                 .document(id)

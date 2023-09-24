@@ -1,5 +1,6 @@
 package elfak.mosis.petfinder
 
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -35,6 +36,15 @@ class FirstFragment : Fragment() {
     private lateinit var binding: FragmentFirstBinding
     private val REQUEST_IMAGE_CAPTURE = 1;
 
+    private val cameraPermissionRequest =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                dispatchTakePictureIntent()
+            } else {
+                Toast.makeText(requireContext(), "Please allow PetFinder to use your phone camera", Toast.LENGTH_SHORT).show()
+            }
+        }
+
 override fun onResume() {
     super.onResume()
     val title: TextView = requireActivity().findViewById(R.id.toolbar_title)
@@ -51,7 +61,7 @@ override fun onResume() {
     }
 
     fun onLostPetClick(view: View) {
-        this.findNavController().navigate(R.id.action_FirstFragment_to_EditFragment)
+        this.findNavController().navigate(R.id.action_FirstFragment_to_AddPetFragment)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -64,8 +74,15 @@ override fun onResume() {
 
         val fabC=binding.cameraFab
         fabC.setOnClickListener{
-            dispatchTakePictureIntent()
-            //saveNewPost()
+            if (ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.CAMERA
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                cameraPermissionRequest.launch(Manifest.permission.CAMERA)
+            } else {
+                dispatchTakePictureIntent()
+            }
         }
     }
 

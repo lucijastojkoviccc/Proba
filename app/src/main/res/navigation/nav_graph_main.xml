@@ -25,8 +25,12 @@
         <action
             android:id="@+id/action_FirstFragment_to_UsersFragment"
             app:destination="@id/UsersFragment"/>
+        <action
+            android:id="@+id/action_FirstFragment_to_AddPetFragment"
+            app:destination="@id/AddPetFragment"/>
 
     </fragment>
+
 
 
     <fragment
@@ -134,6 +138,14 @@
         <action
             android:id="@+id/action_UsersFragment_to_EditFragment"
             app:destination="@id/EditFragment"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/AddPetFragment"
+        android:name="elfak.mosis.petfinder.AddPetFragment"
+        android:label="AddPet"
+        tools:layout="@layout/fragment_add_pet">
 
     </fragment>
 </navigation>

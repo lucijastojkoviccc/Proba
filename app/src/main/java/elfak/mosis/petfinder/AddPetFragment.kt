@@ -38,17 +38,17 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import elfak.mosis.petfinder.data.MyPet
-import elfak.mosis.petfinder.databinding.FragmentEditBinding
+import elfak.mosis.petfinder.databinding.FragmentAddPetBinding
 import elfak.mosis.petfinder.model.LocationViewModel
 import elfak.mosis.petfinder.model.MyPetViewModel
 import java.io.*
 import java.util.*
 
 
-class EditFragment : Fragment() {
+class AddPetFragment : Fragment() {
 
-    private lateinit var binding: FragmentEditBinding
-//    private val binding get() = _binding!!
+    private lateinit var binding: FragmentAddPetBinding
+    //    private val binding get() = _binding!!
     private val myPetViewModel: MyPetViewModel by activityViewModels()
     private val locationViewModel: LocationViewModel by activityViewModels()
     private val REQUEST_IMAGE_CAPTURE = 1;
@@ -58,22 +58,6 @@ class EditFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setFragmentResultListener("requestKey") { key, bundle ->
-            val result = bundle.getString("data")
-            kliknutID = result.toString()
-        }
-
-        Firebase.firestore.collection("pets").whereEqualTo("petID", kliknutID).get().addOnSuccessListener {
-            for(document in it)// znam da ce da bude samo jedan dokument jer saljem ID
-            {
-                if(document["ownerID"]!=Firebase.auth.currentUser!!.uid)
-                {
-                    binding.editmypetFinishedButton.visibility= View.GONE
-                    binding.editmypetSelectPictureButton.visibility=View.GONE
-
-                }
-            }
-        }
     }
 
     override fun onCreateView(
@@ -84,39 +68,19 @@ class EditFragment : Fragment() {
 
         if (myPetViewModel.selected == null)
             (activity as AppCompatActivity).supportActionBar?.title = "Add my pet"
-        binding= FragmentEditBinding.inflate(inflater, container, false)
+        binding= FragmentAddPetBinding.inflate(inflater, container, false)
         return binding.root
     }
     private fun fillData()
     {
-        //get ako nema internera ce da pokupi iz kesa podatke
-        var id = Firebase.auth.currentUser!!.uid   ///////////////// ovde treba da stavim da budu informacije odredjenog ljubimca, nevezano za usera
-        Firebase.firestore.collection("pets").document(id).get().addOnSuccessListener {
-           binding.editmypetTypeEdit.setText(it["type"].toString())
-            binding.editmypetBreedEdit.setText(it["breed"]?.toString())
-            binding.editmypetColorEdit.setText(it["color"]?.toString())
-            binding.editmypetNameEdit.setText(it["name"]?.toString())
-            binding.editmypetDescEdit.setText(it["description"]?.toString())
-        }
-
-        if (checkInternetConnection())
-        {
-            //slika ljubimca ne tog nekog usera
-            Firebase.storage.getReference("petPic/$id.jpg").downloadUrl.addOnSuccessListener { uri->
-                Glide.with(requireContext()).load(uri).into(binding.editmypetPicture)
-                pictureSet=true
-                adjustPadding()
-            }
-
+        var id = Firebase.auth.currentUser!!.uid
+        Firebase.firestore.collection("users").document(id).get().addOnSuccessListener {
+            binding.editmypetLatitudeEdit.setText(it["latitude"].toString())
+            binding.editmypetLongitudeEdit.setText(it["longitude"].toString())
         }
 
     }
 
-    private fun checkInternetConnection() : Boolean
-    {
-        var manager = requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        return manager.activeNetworkInfo?.isConnectedOrConnecting == true
-    }
 
     private fun loadLocalPetPicture()
     {
@@ -136,10 +100,13 @@ class EditFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        fillData()
+        binding.editmypetFinishedButton.isEnabled = true
         binding.editmypetSelectPictureButton.setOnClickListener {
-            dispatchTakePictureIntent()
-            enableEdit()
+            loadLocalPetPicture()
+            //enableEdit()
         }
+        fillData()
         binding.editmypetCancelButton.setOnClickListener {
             findNavController().popBackStack()
         }
@@ -151,6 +118,8 @@ class EditFragment : Fragment() {
             var color=binding.editmypetColorEdit.text.toString()
             var name = binding.editmypetNameEdit.text.toString()
             var description = binding.editmypetDescEdit.text.toString()
+            var longitude=binding.editmypetLongitudeEdit.text.toString()
+            var latitude=binding.editmypetLatitudeEdit.text.toString()
 
             binding.editmypetPicture.isDrawingCacheEnabled = true
             binding.editmypetPicture.buildDrawingCache()
@@ -159,7 +128,7 @@ class EditFragment : Fragment() {
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, nizBajtova)
             val pic = nizBajtova.toByteArray()
 
-            changeLostPetData(type, breed, color, name, pic, description)
+            changeLostPetData(type, breed, color, name, pic, description, longitude, latitude)
             val navigation: NavigationView = requireActivity().findViewById(R.id.nav_view)
             val headerLayout: View = navigation.getHeaderView(0)
             val image: ImageView = headerLayout.findViewById(R.id.slika)
@@ -176,7 +145,7 @@ class EditFragment : Fragment() {
             override fun afterTextChanged(p0: Editable?)
             {
                 formCheck[1] = p0?.isNotEmpty() ?: false
-                enableEdit()
+                //enableEdit()
             }
         })
 
@@ -188,7 +157,7 @@ class EditFragment : Fragment() {
             override fun afterTextChanged(p0: Editable?)
             {
                 formCheck[2] = p0?.isNotEmpty() ?: false
-                enableEdit()
+                //enableEdit()
             }
         })
         binding.editmypetColorEdit.addTextChangedListener(object : TextWatcher
@@ -198,7 +167,7 @@ class EditFragment : Fragment() {
             override fun afterTextChanged(p0: Editable?)
             {
                 formCheck[3] = p0?.isNotEmpty() ?: false
-                enableEdit()
+//                enableEdit()
             }
         })
         binding.editmypetNameEdit.addTextChangedListener(object : TextWatcher
@@ -208,7 +177,7 @@ class EditFragment : Fragment() {
             override fun afterTextChanged(p0: Editable?)
             {
                 formCheck[4] = p0?.isNotEmpty() ?: false
-                enableEdit()
+//                enableEdit()
             }
         })
         binding.editmypetDescEdit.addTextChangedListener(object : TextWatcher
@@ -218,12 +187,12 @@ class EditFragment : Fragment() {
             override fun afterTextChanged(p0: Editable?)
             {
                 formCheck[5] = p0?.isNotEmpty() ?: false
-                enableEdit()
+//                enableEdit()
             }
         })
-        enableEdit()
+//        enableEdit()
     }
-    private fun changeLostPetData(type:String, breed:String, color:String, name:String, pic:ByteArray, description:String)
+    private fun changeLostPetData(type:String, breed:String, color:String, name:String, pic:ByteArray, description:String, longitude:String, latitude:String)
     {
         if(Firebase.auth.currentUser?.uid?.isNotEmpty() == true)  // ovde hocu da omogucim da menjam samo pets osobe koja je ulogovana ne bilo kome!!!
         {
@@ -245,19 +214,19 @@ class EditFragment : Fragment() {
                 .putFile(Uri.fromFile(File(currentPhotoPath)))
         }
     }
-    private fun enableEdit()
-    {
-        if(formCheck.all { it })
-        {
-           //binding.button.setBackgroundResource(R.drawable.et_button_shape_green)
-            binding.editmypetFinishedButton.isEnabled = true
-        }
-        else
-        {
-            //binding.button.setBackgroundResource(R.drawable.button_disabled)
-            binding.editmypetFinishedButton.isEnabled = false
-        }
-    }
+//    private fun enableEdit()
+//    {
+//        if(formCheck.all { it })
+//        {
+//            //binding.button.setBackgroundResource(R.drawable.et_button_shape_green)
+//            binding.editmypetFinishedButton.isEnabled = true
+//        }
+//        else
+//        {
+//            //binding.button.setBackgroundResource(R.drawable.button_disabled)
+//            binding.editmypetFinishedButton.isEnabled = false
+//        }
+//    }
     private fun dispatchTakePictureIntent()
     {
         try
@@ -328,7 +297,7 @@ class EditFragment : Fragment() {
             formCheck[0] = true
             pictureSet=true;
             adjustPadding();
-            enableEdit()
+            //enableEdit()
         }
     }
 

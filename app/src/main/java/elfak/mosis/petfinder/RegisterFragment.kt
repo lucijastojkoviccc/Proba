@@ -123,7 +123,7 @@ class RegisterFragment : Fragment()
                         Firebase.firestore
                         .collection("users").document(Firebase.auth.currentUser!!.uid)
                         .set(korisnik)
-                            .addOnSuccessListener { Toast.makeText(requireContext(),"oce",Toast.LENGTH_SHORT).show() }
+                            //.addOnSuccessListener { Toast.makeText(requireContext(),"oce",Toast.LENGTH_SHORT).show() }
                  }
                 else {
                          Firebase.firestore
