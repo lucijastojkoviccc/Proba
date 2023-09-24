@@ -117,38 +117,41 @@ class FragmentEditProfile : Fragment()
         val btnImage = binding.profileImage
         btnImage.setOnClickListener{
             dispatchTakePictureIntent()
-            enableEdit()
+            //enableEdit()
         }
 
         val btnText = binding.textViewTakePicture
         btnText.setOnClickListener{
             dispatchTakePictureIntent()
-            enableEdit()
+            //enableEdit()
         }
 
 
         binding.button.setOnClickListener {
-            var name = binding.editTextEditProfileName.text.toString()
-            var email = binding.editTextEditProfileEmail.text.toString()
-            var desc = binding.editTextEditProfileDescription.text.toString()
+            val name = binding.editTextEditProfileName.text.toString()
+            val email = binding.editTextEditProfileEmail.text.toString()
+            val desc = binding.editTextEditProfileDescription.text.toString()
 
-            binding.profileImage.isDrawingCacheEnabled = true
-            binding.profileImage.buildDrawingCache()
-            var bitmap = (binding.profileImage.drawable as BitmapDrawable).bitmap
-            val nizBajtova = ByteArrayOutputStream()
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, nizBajtova)
-            val pic = nizBajtova.toByteArray()
+            val bitmapDrawable = binding.profileImage.drawable as? BitmapDrawable
+            val pic: ByteArray? = bitmapDrawable?.bitmap?.let { bitmap ->
+                val byteArrayOutputStream = ByteArrayOutputStream()
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
+                byteArrayOutputStream.toByteArray()
+            }
 
             changeUserData(name, email, desc, pic)
+
             val navigation: NavigationView = requireActivity().findViewById(R.id.nav_view)
             val headerLayout: View = navigation.getHeaderView(0)
             val image: ImageView = headerLayout.findViewById(R.id.imgUser)
 
-            Glide.with(requireContext()).load(Uri.fromFile(File(currentPhotoPath))).into(image)
+            currentPhotoPath?.let {
+                Glide.with(requireContext()).load(Uri.fromFile(File(it))).into(image)
+            }
 
             findNavController().popBackStack()
-
         }
+
         binding.button2.setOnClickListener {  findNavController().popBackStack() }
 
 
@@ -159,7 +162,7 @@ class FragmentEditProfile : Fragment()
             override fun afterTextChanged(p0: Editable?)
             {
                 formCheck[1] = p0?.isNotEmpty() ?: false
-                enableEdit()
+                //enableEdit()
             }
         })
 
@@ -171,7 +174,7 @@ class FragmentEditProfile : Fragment()
             override fun afterTextChanged(p0: Editable?)
             {
                 formCheck[2] = p0?.isNotEmpty() ?: false
-                enableEdit()
+                //enableEdit()
             }
         })
 
@@ -183,13 +186,13 @@ class FragmentEditProfile : Fragment()
             override fun afterTextChanged(p0: Editable?)
             {
                 formCheck[3] = p0?.isNotEmpty() ?: false
-                enableEdit()
+                //enableEdit()
             }
         })
-        enableEdit()
+        //enableEdit()
     }
 
-    private fun changeUserData(name: String, email: String, desc: String, pic: ByteArray)
+    private fun changeUserData(name: String, email: String, desc: String, pic: ByteArray?)
     {
         if(Firebase.auth.currentUser?.uid?.isNotEmpty() == true)
         {
@@ -210,19 +213,19 @@ class FragmentEditProfile : Fragment()
         }
     }
 
-    private fun enableEdit()
-    {
-        if(formCheck.all { it })
-        {
-            //binding.button.setBackgroundResource(R.drawable.et_button_shape_green)
-            binding.button.isEnabled = true
-        }
-        else
-        {
-            //binding.button.setBackgroundResource(R.drawable.button_disabled)
-            binding.button.isEnabled = false
-        }
-    }
+//    private fun enableEdit()
+//    {
+//        if(formCheck.all { it })
+//        {
+//            //binding.button.setBackgroundResource(R.drawable.et_button_shape_green)
+//            binding.button.isEnabled = true
+//        }
+//        else
+//        {
+//            //binding.button.setBackgroundResource(R.drawable.button_disabled)
+//            binding.button.isEnabled = false
+//        }
+//    }
     private fun dispatchTakePictureIntent()
     {
         try
@@ -291,7 +294,7 @@ class FragmentEditProfile : Fragment()
             Glide.with(requireContext()).load(file).into(binding.profileImage)
             //binding.profileImagePlaceholder.setImageDrawable(null)
             formCheck[0] = true
-            enableEdit()
+            //enableEdit()
         }
     }
     private fun verifyStoragePermissions()
