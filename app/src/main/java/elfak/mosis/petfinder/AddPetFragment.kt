@@ -167,7 +167,7 @@ class AddPetFragment : Fragment() {
             .addOnSuccessListener { documentReference ->
                 Toast.makeText(
                     requireContext(),
-                    "Pet added successfully",
+                    "Pet added successfully!",
                     Toast.LENGTH_SHORT
                 ).show()
             }
