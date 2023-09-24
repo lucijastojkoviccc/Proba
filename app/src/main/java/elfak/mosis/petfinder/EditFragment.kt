@@ -273,7 +273,7 @@ class EditFragment : Fragment() {
                     }
                     catch (ex: IOException)
                     {
-                        Log.d("CampingApp", "Error while trying to launch camera - " + ex.message)
+                        Log.d("PetFinder", "Error while trying to launch camera - " + ex.message)
                         Toast.makeText(requireContext(), R.string.error, Toast.LENGTH_SHORT).show()
 
                         null

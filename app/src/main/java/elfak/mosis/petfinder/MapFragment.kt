@@ -115,9 +115,6 @@ private fun startLocationTracking() {
             override fun onLocationChanged(location: Location) {
                 val latitude = location.latitude
                 val longitude = location.longitude
-
-                // Update your UI with the new location
-                // For example, you can update 'startMarker' position here
                 startMarker.position = GeoPoint(latitude, longitude)
             }
 

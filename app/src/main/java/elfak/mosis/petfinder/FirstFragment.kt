@@ -53,7 +53,8 @@ override fun onResume() {
     (activity as DrawerLocker?)!!.setDrawerEnabled(true)
     for (i in 0 until navigation.getMenu().size())
         navigation.getMenu().getItem(i).setChecked(false)
-    title.text = "Welcome!"
+    title.text = "PetFinder"
+
 }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentFirstBinding.inflate(inflater, container, false)

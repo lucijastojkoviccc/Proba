@@ -9,6 +9,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.icu.text.SimpleDateFormat
+import android.location.LocationManager
 import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Bundle
@@ -23,6 +24,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
@@ -43,262 +45,142 @@ import elfak.mosis.petfinder.model.LocationViewModel
 import elfak.mosis.petfinder.model.MyPetViewModel
 import java.io.*
 import java.util.*
-
-
 class AddPetFragment : Fragment() {
 
     private lateinit var binding: FragmentAddPetBinding
-    //    private val binding get() = _binding!!
     private val myPetViewModel: MyPetViewModel by activityViewModels()
     private val locationViewModel: LocationViewModel by activityViewModels()
-    private val REQUEST_IMAGE_CAPTURE = 1;
-    private var formCheck:BooleanArray = BooleanArray(6)
+    private var formCheck: BooleanArray = BooleanArray(6)
     private var pictureSet = false
-    private lateinit var kliknutID: String
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    private val GALLERY_REQUEST_CODE = 1
+
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            startActivityForResult(intent, GALLERY_REQUEST_CODE)
+        } else {
+            Toast.makeText(requireContext(), "Permission Denied", Toast.LENGTH_SHORT).show()
+        }
     }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        if (myPetViewModel.selected == null)
-            (activity as AppCompatActivity).supportActionBar?.title = "Add my pet"
-        binding= FragmentAddPetBinding.inflate(inflater, container, false)
+        binding = FragmentAddPetBinding.inflate(inflater, container, false)
         return binding.root
     }
-    private fun fillData()
-    {
-        var id = Firebase.auth.currentUser!!.uid
-        Firebase.firestore.collection("users").document(id).get().addOnSuccessListener {
-            binding.editmypetLatitudeEdit.setText(it["latitude"].toString())
-            binding.editmypetLongitudeEdit.setText(it["longitude"].toString())
-        }
 
-    }
-
-
-    private fun loadLocalPetPicture()
-    {
-        try
-        {
-            var putanja = Environment.getExternalStorageDirectory().toString()
-            var fajl = File(putanja, "PetImage")
-            var inputStream = FileInputStream(fajl)
-            binding.editmypetPicture.setImageBitmap(BitmapFactory.decodeStream(inputStream))
-            inputStream.close()
-        }
-        catch (e:Exception)
-        {
-            Log.d("PetFinder", e.message.toString())
-        }
-    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         fillData()
         binding.editmypetFinishedButton.isEnabled = true
+
         binding.editmypetSelectPictureButton.setOnClickListener {
             loadLocalPetPicture()
-            //enableEdit()
         }
-        fillData()
+
         binding.editmypetCancelButton.setOnClickListener {
             findNavController().popBackStack()
         }
-        fillData()
-        binding.editmypetFinishedButton.setOnClickListener{
 
-            var type=binding.editmypetTypeEdit.text.toString()
-            var breed=binding.editmypetBreedEdit.text.toString()
-            var color=binding.editmypetColorEdit.text.toString()
-            var name = binding.editmypetNameEdit.text.toString()
-            var description = binding.editmypetDescEdit.text.toString()
-            var longitude=binding.editmypetLongitudeEdit.text.toString()
-            var latitude=binding.editmypetLatitudeEdit.text.toString()
+        binding.editmypetFinishedButton.setOnClickListener {
+            val type = binding.editmypetTypeEdit.text.toString()
+            val breed = binding.editmypetBreedEdit.text.toString()
+            val color = binding.editmypetColorEdit.text.toString()
+            val name = binding.editmypetNameEdit.text.toString()
+            val description = binding.editmypetDescEdit.text.toString()
+            val longitude = binding.editmypetLongitudeEdit.text.toString()
+            val latitude = binding.editmypetLatitudeEdit.text.toString()
 
-            binding.editmypetPicture.isDrawingCacheEnabled = true
-            binding.editmypetPicture.buildDrawingCache()
-            var bitmap = (binding.editmypetPicture.drawable as BitmapDrawable).bitmap
-            val nizBajtova = ByteArrayOutputStream()
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, nizBajtova)
-            val pic = nizBajtova.toByteArray()
-
-            changeLostPetData(type, breed, color, name, pic, description, longitude, latitude)
-            val navigation: NavigationView = requireActivity().findViewById(R.id.nav_view)
-            val headerLayout: View = navigation.getHeaderView(0)
-            val image: ImageView = headerLayout.findViewById(R.id.slika)
-
-            Glide.with(requireContext()).load(Uri.fromFile(File(currentPhotoPath))).into(image)
-
-            findNavController().popBackStack()
-        }
-
-        binding.editmypetTypeEdit.addTextChangedListener(object : TextWatcher
-        {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun afterTextChanged(p0: Editable?)
-            {
-                formCheck[1] = p0?.isNotEmpty() ?: false
-                //enableEdit()
+            if (type.isNotEmpty() && breed.isNotEmpty() && color.isNotEmpty() && name.isNotEmpty()) {
+                addLostPet(type, breed, color, name, description, longitude, latitude, currentPhotoPath)
+            } else {
+                Toast.makeText(requireContext(), "Please fill in all the fields.", Toast.LENGTH_SHORT).show()
             }
-        })
-
-
-        binding.editmypetBreedEdit.addTextChangedListener(object : TextWatcher
-        {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun afterTextChanged(p0: Editable?)
-            {
-                formCheck[2] = p0?.isNotEmpty() ?: false
-                //enableEdit()
-            }
-        })
-        binding.editmypetColorEdit.addTextChangedListener(object : TextWatcher
-        {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun afterTextChanged(p0: Editable?)
-            {
-                formCheck[3] = p0?.isNotEmpty() ?: false
-//                enableEdit()
-            }
-        })
-        binding.editmypetNameEdit.addTextChangedListener(object : TextWatcher
-        {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun afterTextChanged(p0: Editable?)
-            {
-                formCheck[4] = p0?.isNotEmpty() ?: false
-//                enableEdit()
-            }
-        })
-        binding.editmypetDescEdit.addTextChangedListener(object : TextWatcher
-        {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun afterTextChanged(p0: Editable?)
-            {
-                formCheck[5] = p0?.isNotEmpty() ?: false
-//                enableEdit()
-            }
-        })
-//        enableEdit()
-    }
-    private fun changeLostPetData(type:String, breed:String, color:String, name:String, pic:ByteArray, description:String, longitude:String, latitude:String)
-    {
-        if(Firebase.auth.currentUser?.uid?.isNotEmpty() == true)  // ovde hocu da omogucim da menjam samo pets osobe koja je ulogovana ne bilo kome!!!
-        {
-            var id = Firebase.auth.currentUser!!.uid
-            var newDoc = hashMapOf<String, Any>(
-                "type" to type,
-                "breed" to breed,
-                "color" to color,
-                "name" to name,
-                "description" to description
-            )
-            Firebase.firestore
-                .collection("pets")
-                .document(id)
-                .update(newDoc)
-
-            Firebase.storage
-                .getReference("petPic/$id.jpg")
-                .putFile(Uri.fromFile(File(currentPhotoPath)))
         }
     }
-//    private fun enableEdit()
-//    {
-//        if(formCheck.all { it })
-//        {
-//            //binding.button.setBackgroundResource(R.drawable.et_button_shape_green)
-//            binding.editmypetFinishedButton.isEnabled = true
-//        }
-//        else
-//        {
-//            //binding.button.setBackgroundResource(R.drawable.button_disabled)
-//            binding.editmypetFinishedButton.isEnabled = false
-//        }
-//    }
-    private fun dispatchTakePictureIntent()
-    {
-        try
-        {
-
-            Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
-                // Ensure that there's a camera activity to handle the intent
-                takePictureIntent.resolveActivity(requireContext().packageManager)?.also {
-                    // Create the File where the photo should go
-                    val photoFile: File? = try
-                    {
-                        createImageFile()
-                    }
-                    catch (ex: IOException)
-                    {
-                        Log.d("CampingApp", "Error while trying to launch camera - " + ex.message)
-                        Toast.makeText(requireContext(), R.string.error, Toast.LENGTH_SHORT).show()
-
-                        null
-                    }
-                    // Continue only if the File was successfully created
-                    photoFile?.also {
-                        val photoURI: Uri = FileProvider.getUriForFile(
-                            requireContext(),
-                            "com.example.android.fileprovider",
-                            it
-                        )
-                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-                        startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
-                    }
-                }
-            }
-        }
-        catch (e:Exception)
-        {
-            Log.d("CampingApp", "Error while trying to launch camera - " + e.message)
-            Toast.makeText(requireContext(), R.string.error, Toast.LENGTH_SHORT).show()
-        }
-    }
-
     lateinit var currentPhotoPath: String
-
-    @Throws(IOException::class)
-    private fun createImageFile(): File
-    {
-        // Create an image file name
-        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-        val storageDir: File? = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        return File.createTempFile(
-            "JPEG_${timeStamp}_", /* prefix */
-            ".jpg", /* suffix */
-            storageDir /* directory */
-        ).apply {
-            // Save a file: path for use with ACTION_VIEW intents
-            currentPhotoPath = absolutePath
+    private fun fillData() {
+        val locationManager =
+            requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+        if (location != null) {
+            val latitude = location.latitude
+            val longitude = location.longitude
+            binding.editmypetLatitudeEdit.setText(latitude.toString())
+            binding.editmypetLongitudeEdit.setText(longitude.toString())
+        } else {
+            // Handle the case when location is null (e.g., GPS is disabled)
+            Log.e("FillData", "Location is null")
         }
-
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
-    {
+
+
+    private fun loadLocalPetPicture() {
+        requestPermissionLauncher.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE)
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK)
-        {
-            var file = File(currentPhotoPath)
-            Glide.with(requireContext()).load(file).into(binding.editmypetPicture)
-            //binding.profileImagePlaceholder.setImageDrawable(null)
-            formCheck[0] = true
-            pictureSet=true;
-            adjustPadding();
-            //enableEdit()
+        if (requestCode == GALLERY_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+            val selectedImage: Uri? = data.data
+            if (selectedImage != null) {
+                Glide.with(requireContext()).load(selectedImage).into(binding.editmypetPicture)
+                pictureSet = true
+                adjustPadding()
+            }
         }
+    }
+
+    private fun addLostPet(
+        type: String,
+        breed: String,
+        color: String,
+        name: String,
+        description: String,
+        longitude: String,
+        latitude: String,
+        picUri: String
+    ) {
+        val id = Firebase.auth.currentUser!!.uid
+        val newPet = hashMapOf(
+            "type" to type,
+            "breed" to breed,
+            "color" to color,
+            "name" to name,
+            "description" to description,
+            "longitude" to longitude,
+            "latitude" to latitude,
+            "ownerID" to id
+        )
+
+        Firebase.firestore
+            .collection("pets")
+            .add(newPet)
+            .addOnSuccessListener { documentReference ->
+                Toast.makeText(
+                    requireContext(),
+                    "Pet added successfully with ID: ${documentReference.id}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(
+                    requireContext(),
+                    "Error adding pet: $e",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+        // Now, you should upload the image using Firebase storage.
+        // You can use `picUri` to get the image path.
     }
 
     private fun adjustPadding() {
@@ -306,16 +188,6 @@ class AddPetFragment : Fragment() {
             binding.editmypetPicture.setPadding(0, 0, 0, 0)
         } else {
             binding.editmypetPicture.setPadding(55, 55, 55, 55)
-        }
-    }
-    private fun verifyStoragePermissions()
-    {
-        var permisiije = ActivityCompat.checkSelfPermission(requireContext(),android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        if(permisiije != PackageManager.PERMISSION_GRANTED)
-        {
-            ActivityCompat.requestPermissions(requireActivity()
-                , arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                , 1)
         }
     }
 }
