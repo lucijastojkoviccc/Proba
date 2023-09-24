@@ -1,6 +1,5 @@
 package elfak.mosis.petfinder
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -10,17 +9,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.*
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 
-import elfak.mosis.petfinder.data.MyPet
+import elfak.mosis.petfinder.data.NewPost
 import elfak.mosis.petfinder.databinding.FragmentLoginBinding
 
 
@@ -98,7 +95,7 @@ class LoginFragment : Fragment()
         var email: String = ""
         var description: String = ""
         var points: Long = 0
-        var pets: ArrayList<MyPet> = ArrayList()
+        var pets: ArrayList<NewPost> = ArrayList()
 
 
         var pribavljanjePodataka = Firebase.firestore.collection("users").document(id).get()
@@ -108,7 +105,7 @@ class LoginFragment : Fragment()
             email = (it["email"].toString())
             description = (it["description"].toString())
             points=(it["points"] as Long)
-            var lostPets = it["pets"] as ArrayList<MyPet>
+            var lostPets = it["pets"] as ArrayList<NewPost>
             for (pet in lostPets) {
                 pets.add(pet)
             }

@@ -4,8 +4,6 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
@@ -13,10 +11,9 @@ import com.bumptech.glide.Glide
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import elfak.mosis.petfinder.data.MyPet
-import elfak.mosis.petfinder.data.PetListItem
+import elfak.mosis.petfinder.data.NewPost
 
-class PetsListAdapter(val ct: Context, /*val pets: MutableList<MyPet>?, */val listener: Pomoc, val pets: ArrayList<MyPet>): RecyclerView.Adapter<PetsListAdapter.ViewHolder>()
+class PetsListAdapter(val ct: Context, /*val pets: MutableList<MyPet>?, */val listener: Pomoc, val pets: ArrayList<NewPost>): RecyclerView.Adapter<PetsListAdapter.ViewHolder>()
 {
 
     class ViewHolder (itemView: View) : RecyclerView.ViewHolder(itemView){
@@ -26,7 +23,7 @@ class PetsListAdapter(val ct: Context, /*val pets: MutableList<MyPet>?, */val li
     }
 
     interface Pomoc{
-        fun pomeraj(position: MyPet)
+        fun pomeraj(position: NewPost)
     }
 
       override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

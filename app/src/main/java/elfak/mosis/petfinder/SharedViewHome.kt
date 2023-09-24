@@ -2,7 +2,7 @@ package elfak.mosis.petfinder
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import elfak.mosis.petfinder.data.MyPet
+import elfak.mosis.petfinder.data.NewPost
 import elfak.mosis.petfinder.data.User
 
 class SharedViewHome : ViewModel()
@@ -13,5 +13,5 @@ class SharedViewHome : ViewModel()
     var latitude: MutableLiveData<Double> = MutableLiveData()
     var dataChanger: MutableLiveData<Boolean> = MutableLiveData(false)
     var fullUcitavanje: MutableLiveData<Boolean> = MutableLiveData(false)   //Da li su ucitani svi podaci o korisnicima
-    var ljubimci: MutableList<MyPet> = mutableListOf()
+    var ljubimci: MutableList<NewPost> = mutableListOf()
 }

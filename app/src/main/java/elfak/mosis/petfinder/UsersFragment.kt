@@ -11,12 +11,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import elfak.mosis.petfinder.data.MyPet
 import elfak.mosis.petfinder.data.User
-import java.security.Timestamp
 
 class UsersFragment : Fragment(), UserListAdapter.Pomoc {
 

@@ -2,6 +2,7 @@ package elfak.mosis.petfinder
 
 import android.Manifest
 import android.app.Activity
+import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -44,6 +45,37 @@ class FirstFragment : Fragment() {
                 Toast.makeText(requireContext(), "Please allow PetFinder to use your phone camera", Toast.LENGTH_SHORT).show()
             }
         }
+    private val galleryPermissionRequest = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+        if (isGranted) {
+            saveImageToGallery()
+        } else {
+            Toast.makeText(requireContext(), "Please allow PetFinder to access your gallery", Toast.LENGTH_SHORT).show()
+        }
+    }
+    private fun saveImageToGallery() {
+        val contentValues = ContentValues().apply {
+            put(MediaStore.Images.Media.DISPLAY_NAME, "PetFinder_${System.currentTimeMillis()}.jpg")
+            put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+        }
+
+        val resolver = requireContext().contentResolver
+        val imageUri: Uri? = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+
+        imageUri?.let {
+            try {
+                resolver.openOutputStream(it)?.use { outputStream ->
+                    val file = File(currentPhotoPath)
+                    file.inputStream().copyTo(outputStream)
+                    outputStream.flush()
+                }
+
+                Toast.makeText(requireContext(), "Image saved to gallery", Toast.LENGTH_SHORT).show()
+            } catch (e: IOException) {
+                e.printStackTrace()
+                Toast.makeText(requireContext(), "Error saving image to gallery", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
 override fun onResume() {
     super.onResume()
@@ -143,28 +175,13 @@ override fun onResume() {
 
     }
 
-    private fun saveNewPost(lon: String, lat: String, pic:String)
-    {
-        Firebase.firestore.collection("users").whereEqualTo("UserID", Firebase.auth.currentUser!!.uid).get().addOnSuccessListener {
-
-            for(doc in it)
-            {
-
-            }
-        }
-
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
     {
 
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-            var file = File(currentPhotoPath)
-//            Glide.with(requireContext()).load(file).into(binding.profileImage)
-//            //binding.profileImagePlaceholder.setImageDrawable(null)
-//            formCheck[0] = true
-//            enableEdit()
+           galleryPermissionRequest.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+           var file = File(currentPhotoPath)
         }
     }
 

@@ -5,14 +5,15 @@ import android.view.*
 import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import elfak.mosis.petfinder.data.MyPet
+import elfak.mosis.petfinder.data.NewPost
 import elfak.mosis.petfinder.data.PetListItem
 import elfak.mosis.petfinder.databinding.FragmentSecondBinding
-import elfak.mosis.petfinder.model.MyPetViewModel
+import elfak.mosis.petfinder.model.NewPostViewModel
+import java.util.*
+import kotlin.collections.ArrayList
 
 class SecondFragment : Fragment() {
 
@@ -20,7 +21,7 @@ class SecondFragment : Fragment() {
 
     private val binding get() = _binding!!
 
-    private val myPetViewModel:MyPetViewModel by activityViewModels()
+    private val myPetViewModel: NewPostViewModel by activityViewModels()
     private lateinit var myPetsList: ListView
     private lateinit var radioGroup: RadioGroup
     private lateinit var radioButtonMyPosts: RadioButton
@@ -30,6 +31,8 @@ class SecondFragment : Fragment() {
     private lateinit var newArrayList: ArrayList<PetListItem>
     lateinit var imageId:Array<Int>
     lateinit var heading: Array<String>
+    val calendar = Calendar.getInstance()
+    val customDate = calendar.time
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
@@ -44,14 +47,15 @@ class SecondFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val myPetsList: ListView = requireView().findViewById<ListView>(R.id.my_places_list)
-        myPetViewModel.myPetsList.add(MyPet("", "", "", "", "", "", "", "", "",""))
-        myPetsList.adapter = ArrayAdapter<MyPet>(
+
+        myPetViewModel.NewPosts.add(NewPost("", "", "", "", "", "", "", "", "",false,customDate))
+        myPetsList.adapter = ArrayAdapter<NewPost>(
             view.context,
             android.R.layout.simple_list_item_1,
-            myPetViewModel.myPetsList
+            myPetViewModel.NewPosts
         )
         myPetsList.setOnItemClickListener { adapterView, view, i, l ->
-            var myPet = adapterView?.adapter?.getItem(i) as MyPet
+            var myPet = adapterView?.adapter?.getItem(i) as NewPost
             myPetViewModel.selected = myPet
             view.findNavController().navigate(R.id.action_SecondFragment_to_EditFragment)
         }
@@ -68,10 +72,10 @@ class SecondFragment : Fragment() {
     private fun updateViewForRadioButton() {
         if (radioButtonMyPosts.isChecked) {
             textViewTitle.text = "My Posts"
-            myPetsList.adapter = ArrayAdapter<MyPet>(
+            myPetsList.adapter = ArrayAdapter<NewPost>(
                 requireContext(),
                 android.R.layout.simple_list_item_1,
-                myPetViewModel.myPetsList
+                myPetViewModel.NewPosts
             )
         } else if (radioButtonPublic.isChecked) {
             textViewTitle.text = "Public"

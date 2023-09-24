@@ -35,7 +35,7 @@
     <string name="password_input">Password</string>
     <string name="log_in">Log in</string>
     <string name="register">Register</string>
-    <string name="name_input">Name</string>
+    <string name="name_input">Full Name</string>
     <string name="password_input_register">Password (min. 8 characters)</string>
     <string name="confirm_pass">Confirm Password</string>
     <string name="error">Error, try again</string>

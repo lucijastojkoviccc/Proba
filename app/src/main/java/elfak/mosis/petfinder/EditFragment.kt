@@ -1,6 +1,5 @@
 package elfak.mosis.petfinder
 
-import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
@@ -16,11 +15,8 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Base64
 import android.util.Log
 import android.view.*
-import android.widget.Button
-import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -29,7 +25,6 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
@@ -37,10 +32,9 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import elfak.mosis.petfinder.data.MyPet
 import elfak.mosis.petfinder.databinding.FragmentEditBinding
 import elfak.mosis.petfinder.model.LocationViewModel
-import elfak.mosis.petfinder.model.MyPetViewModel
+import elfak.mosis.petfinder.model.NewPostViewModel
 import java.io.*
 import java.util.*
 
@@ -49,7 +43,7 @@ class EditFragment : Fragment() {
 
     private lateinit var binding: FragmentEditBinding
 //    private val binding get() = _binding!!
-    private val myPetViewModel: MyPetViewModel by activityViewModels()
+    private val myPetViewModel: NewPostViewModel by activityViewModels()
     private val locationViewModel: LocationViewModel by activityViewModels()
     private val REQUEST_IMAGE_CAPTURE = 1;
     private var formCheck:BooleanArray = BooleanArray(6)
@@ -91,7 +85,7 @@ class EditFragment : Fragment() {
     {
         //get ako nema internera ce da pokupi iz kesa podatke
         var id = Firebase.auth.currentUser!!.uid   ///////////////// ovde treba da stavim da budu informacije odredjenog ljubimca, nevezano za usera
-        Firebase.firestore.collection("pets").document(id).get().addOnSuccessListener {
+        Firebase.firestore.collection("pets").document(kliknutID).get().addOnSuccessListener {
            binding.editmypetTypeEdit.setText(it["type"].toString())
             binding.editmypetBreedEdit.setText(it["breed"]?.toString())
             binding.editmypetColorEdit.setText(it["color"]?.toString())

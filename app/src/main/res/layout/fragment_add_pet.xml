@@ -92,6 +92,20 @@
 
             android:layout_marginLeft="20dp"
             android:text="Select" />
+
+        <CheckBox
+            android:id="@+id/lostBox"
+            android:layout_width="31dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lost"
+            android:textSize="18dp"
+            android:textColor="@color/black"
+            android:layout_marginStart="8dp" />
+
     </LinearLayout>
     <TextView
         android:id="@+id/description_label"
