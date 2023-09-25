@@ -22,9 +22,9 @@ class UserListAdapter (val ct: Context, val users: ArrayList<User>?, val listene
         fun pomeraj(position: User)
     }
     class ViewHolder(itemView: View, /*listener:Pomoc*/) : RecyclerView.ViewHolder(itemView){
-        val titleImage: ShapeableImageView =itemView.findViewById(R.id.title_image)
+        //val titleImage: ShapeableImageView =itemView.findViewById(R.id.title_image)
         val tvHeading: TextView = itemView.findViewById(R.id.tvHeading)
-        val ceoView: ConstraintLayout = itemView.findViewById(R.id.users_list)
+        val ceoView: ConstraintLayout = itemView.findViewById(R.id.listViewKorisnici)
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserListAdapter.ViewHolder {
         val itemView=
@@ -38,9 +38,9 @@ class UserListAdapter (val ct: Context, val users: ArrayList<User>?, val listene
         holder.tvHeading.text = users?.get(position)?.Name
                 var userID = users?.get(position)?.ID
 
-        Firebase.storage.getReference("profilePics/$userID.jpg").downloadUrl.addOnSuccessListener { uri ->
-            Glide.with(ct).load(uri).into(holder.titleImage)
-        }
+//        Firebase.storage.getReference("profilePics/$userID.jpg").downloadUrl.addOnSuccessListener { uri ->
+//            Glide.with(ct).load(uri).into(holder.titleImage)
+//        }
 
         holder.ceoView.setOnClickListener{
             users?.get(position)?.let { it1 -> listener.pomeraj(it1) }  // hocu da mogu da kliknem bilo gde na tog usera i da me on odvede na EditProfile aka da mi pokaze info o tom nekome

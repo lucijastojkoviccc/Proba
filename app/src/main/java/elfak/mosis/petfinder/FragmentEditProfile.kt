@@ -52,29 +52,22 @@ class FragmentEditProfile : Fragment()
     private val REQUEST_IMAGE_CAPTURE = 1;
     private var selectedImageUri: Uri? = null
     private var formCheck:BooleanArray = BooleanArray(4)
-
+    private var hasExistingPhoto: Boolean = false
     override fun onResume() {
         super.onResume()
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        setFragmentResultListener("requestKey") { key, bundle ->
-            val result = bundle.getString("data")
-            dobijeniID = result.toString()
-            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
             val title: TextView = requireActivity().findViewById(R.id.toolbar_title)
             val navigation: NavigationView = requireActivity().findViewById(R.id.nav_view)
             (activity as DrawerLocker?)!!.setDrawerEnabled(true)
-
-
-            for (i in 0 until navigation.getMenu().size())
-                navigation.getMenu().getItem(i).setChecked(false)
-
-            title.text = "Edit Profile"
-            if(dobijeniID!=Firebase.auth.currentUser!!.uid)
-            {
-                binding.button.visibility=View.GONE
-                binding.textViewTakePicture.visibility=View.GONE
+        if (Firebase.auth.currentUser?.uid?.isNotEmpty() == true) {
+            val id = Firebase.auth.currentUser!!.uid
+            Firebase.storage.getReference("profilePics/$id.jpg").downloadUrl.addOnSuccessListener { uri ->
+                Glide.with(requireContext()).load(uri).into(binding.profileImage)
+                binding.imgUser.isVisible = false
+                hasExistingPhoto = true // Set the flag to true
+            }.addOnFailureListener {
+                hasExistingPhoto = false // Set the flag to false if photo doesn't exist
             }
-
         }
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
@@ -144,9 +137,10 @@ class FragmentEditProfile : Fragment()
             val navigation: NavigationView = requireActivity().findViewById(R.id.nav_view)
             val headerLayout: View = navigation.getHeaderView(0)
             val image: ImageView = headerLayout.findViewById(R.id.imgUser)
-
-            currentPhotoPath?.let {
-                Glide.with(requireContext()).load(Uri.fromFile(File(it))).into(image)
+            if (image != null) {
+                currentPhotoPath?.let {
+                    Glide.with(requireContext()).load(Uri.fromFile(File(it))).into(image)
+                }
             }
 
             findNavController().popBackStack()
@@ -206,10 +200,6 @@ class FragmentEditProfile : Fragment()
                 .collection("users")
                 .document(id)
                 .update(newDoc)
-
-            Firebase.storage
-                .getReference("profilePics/$id.jpg")
-                .putFile(Uri.fromFile(File(currentPhotoPath)))
         }
     }
 
@@ -292,11 +282,20 @@ class FragmentEditProfile : Fragment()
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             var file = File(currentPhotoPath)
             Glide.with(requireContext()).load(file).into(binding.profileImage)
-            //binding.profileImagePlaceholder.setImageDrawable(null)
+            Glide.with(requireContext()).load(file).into(binding.profileImage)
             formCheck[0] = true
-            //enableEdit()
         }
+        // Check if there was an existing photo, if yes, delete it from Firebase Storage
+        if (hasExistingPhoto) {
+            val id = Firebase.auth.currentUser!!.uid
+            Firebase.storage.getReference("profilePics/$id.jpg").delete()
+        }
+
+        // Upload the new photo to Firebase Storage
+        val id = Firebase.auth.currentUser!!.uid
+        Firebase.storage.getReference("profilePics/$id.jpg").putFile(Uri.fromFile(File(currentPhotoPath)))
     }
+
     private fun verifyStoragePermissions()
     {
         var permisiije = ActivityCompat.checkSelfPermission(requireContext(),android.Manifest.permission.WRITE_EXTERNAL_STORAGE)

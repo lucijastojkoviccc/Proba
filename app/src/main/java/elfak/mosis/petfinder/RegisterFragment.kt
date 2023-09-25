@@ -41,6 +41,7 @@ class RegisterFragment : Fragment()
     private val REQUEST_IMAGE_CAPTURE = 1;
     private val storage = Firebase.storage
     private val storageRef = storage.reference
+    lateinit var emailZaSliku:String
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
@@ -64,6 +65,7 @@ class RegisterFragment : Fragment()
             var email = binding.editTextRegisterEmail.text.toString()
             var pass = binding.editTextRegisterPassword.text.toString()
             var phone=binding.editTextRegisterPhone.text.toString()
+            emailZaSliku=email
             register(name, email, pass, 1,phone)
         }
 
@@ -227,22 +229,36 @@ class RegisterFragment : Fragment()
             binding.registerRegisterButton.isEnabled = false
         }
     }
+
     private fun uploadImageToFirebaseStorage() {
         val file = Uri.fromFile(File(currentPhotoPath))
-        val imageRef = storageRef.child("images/${Firebase.auth.currentUser?.uid}/${file.lastPathSegment}")
+        val imageRef = storageRef.child("images/users/${file.lastPathSegment}")
 
         val uploadTask = imageRef.putFile(file)
 
         uploadTask.addOnSuccessListener {
             Toast.makeText(requireContext(), "Image uploaded to Firebase Storage", Toast.LENGTH_SHORT).show()
+
+            // Now, you can retrieve the download URL if needed
+            imageRef.downloadUrl.addOnSuccessListener { uri ->
+                val imageUrl = uri.toString()
+                // Do something with the imageUrl (e.g., save it to Firestore)
+            }
         }.addOnFailureListener { exception ->
             Toast.makeText(requireContext(), "Error uploading image: ${exception.message}", Toast.LENGTH_SHORT).show()
         }
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
             uploadImageToFirebaseStorage()
+            if (File(currentPhotoPath).exists()) {
+                uploadImageToFirebaseStorage()
+            } else {
+                // Handle the case where no photo was taken
+                Toast.makeText(requireContext(), "No photo taken", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

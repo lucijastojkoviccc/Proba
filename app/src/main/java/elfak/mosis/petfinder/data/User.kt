@@ -10,10 +10,15 @@ data class User(var ID:String,
                )
 {
     constructor(ID:String): this(ID, "", "", "", "",1, ArrayList())
+    constructor(): this("", "", "", "", "",1, ArrayList())
 
     override fun toString(): String {
         val email=this.Email
         val points=this.Points
         return email+" "+points
+    }
+    fun prikaziKoirniske():String
+    {
+        return " Name: $Name\n Username: $Email\n Points: $Points"
     }
 }

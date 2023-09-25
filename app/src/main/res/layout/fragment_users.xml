@@ -7,42 +7,10 @@
     android:background="@color/light_lilac"
     tools:context=".UsersFragment">
 
-    <RadioGroup
-        android:id="@+id/radio_group"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center">
-
-        <RadioButton
-            android:id="@+id/radio_ranked"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Ranked"
-            android:buttonTint="@color/purple_500"/>
-
-    </RadioGroup>
-    <TextView
-        android:id="@+id/text_view_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:padding="16dp"
-
-        android:text="Users"
-        android:textColor="@color/purple_500"
-        android:textSize="38sp" />
-
-    <androidx.recyclerview.widget.RecyclerView
+    <ListView
+        android:id="@+id/listViewKorisnici"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/recycler_view"/>
-
-    <ListView
-        android:id="@+id/users_list"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
         android:padding="16dp" />
 
 </LinearLayout>

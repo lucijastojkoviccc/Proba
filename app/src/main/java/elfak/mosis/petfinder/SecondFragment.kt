@@ -8,6 +8,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import elfak.mosis.petfinder.data.NewPost
 import elfak.mosis.petfinder.data.PetListItem
 import elfak.mosis.petfinder.databinding.FragmentSecondBinding
@@ -18,9 +21,7 @@ import kotlin.collections.ArrayList
 class SecondFragment : Fragment() {
 
     private var _binding: FragmentSecondBinding? = null
-
     private val binding get() = _binding!!
-
     private val myPetViewModel: NewPostViewModel by activityViewModels()
     private lateinit var myPetsList: ListView
     private lateinit var radioGroup: RadioGroup
@@ -33,22 +34,26 @@ class SecondFragment : Fragment() {
     lateinit var heading: Array<String>
     val calendar = Calendar.getInstance()
     val customDate = calendar.time
-    override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
-    ): View? {
 
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         _binding = FragmentSecondBinding.inflate(inflater, container, false)
         return binding.root
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val myPetsList: ListView = requireView().findViewById<ListView>(R.id.my_places_list)
+        myPetsList = view.findViewById(R.id.my_places_list)
+        radioGroup = view.findViewById(R.id.radio_group)
+        radioButtonMyPosts = view.findViewById(R.id.radio_my_posts)
+        radioButtonPublic = view.findViewById(R.id.radio_public)
 
-        myPetViewModel.NewPosts.add(NewPost("", "", "", "", "", "", "", "", "",false,customDate))
+        updateViewForRadioButton()
+
+        myPetViewModel.NewPosts.add(NewPost("", "", "", "", "", "", "", "", "",false))
         myPetsList.adapter = ArrayAdapter<NewPost>(
             view.context,
             android.R.layout.simple_list_item_1,
@@ -59,29 +64,64 @@ class SecondFragment : Fragment() {
             myPetViewModel.selected = myPet
             view.findNavController().navigate(R.id.action_SecondFragment_to_EditFragment)
         }
-        //myPetsList = view.findViewById(R.id.my_places_list) ovo kaze gpt ali gore vec ima
-        radioGroup = view.findViewById(R.id.radio_group)
-        radioButtonMyPosts = view.findViewById(R.id.radio_my_posts)
-        radioButtonPublic = view.findViewById(R.id.radio_public)
-        textViewTitle = view.findViewById(R.id.text_view_title)
-        updateViewForRadioButton()
+
         radioGroup.setOnCheckedChangeListener { _, checkedId ->
             updateViewForRadioButton()
         }
     }
+
     private fun updateViewForRadioButton() {
         if (radioButtonMyPosts.isChecked) {
-            textViewTitle.text = "My Posts"
-            myPetsList.adapter = ArrayAdapter<NewPost>(
-                requireContext(),
-                android.R.layout.simple_list_item_1,
-                myPetViewModel.NewPosts
-            )
+
+            val currentUserUid = Firebase.auth.currentUser?.uid
+            if (currentUserUid != null) {
+                Firebase.firestore.collection("pets")
+                    .whereEqualTo("postedID", currentUserUid)
+                    .get()
+                    .addOnSuccessListener { documents ->
+                        val petList = ArrayList<NewPost>()
+                        for (document in documents) {
+                            val pet = document.toObject(NewPost::class.java)
+                            petList.add(pet)
+
+                        }
+                        if (petList.isEmpty()) {
+                            //Toast.makeText(requireContext(), "My List is empty", Toast.LENGTH_SHORT).show()
+                        } else {
+                            myPetsList.adapter = ArrayAdapter<NewPost>(
+                                requireContext(),
+                                android.R.layout.simple_list_item_1,
+                                petList
+                            )
+                        }
+                    }
+                           }
         } else if (radioButtonPublic.isChecked) {
-            textViewTitle.text = "Public"
-            // Set up adapter with other people's posts
+
+            Firebase.firestore.collection("pets")
+                .get()
+                .addOnSuccessListener { documents ->
+                    val petList = ArrayList<NewPost>()
+                    for (document in documents) {
+                        val pet = document.toObject(NewPost::class.java)
+                        petList.add(pet)
+                        Toast.makeText(requireContext(), petList.size.toString(), Toast.LENGTH_SHORT).show()
+                    }
+                    if (petList.isEmpty()) {
+                        Toast.makeText(requireContext(), "The List is empty", Toast.LENGTH_SHORT).show()
+                    } else {
+                        myPetsList.adapter = ArrayAdapter<NewPost>(
+                            requireContext(),
+                            android.R.layout.simple_list_item_1,
+                            petList
+                        )
+                    }
+                }
         }
     }
+
+
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -105,10 +145,6 @@ class SecondFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //setHasOptionsMenu(true)
-
-        // ovaj na snimku stavlja sve staticke stvari a meni treba da mi se to dovlaci iz baze sve
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

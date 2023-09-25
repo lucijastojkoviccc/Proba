@@ -35,27 +35,13 @@
 
     <!-- Change the text color -->
 
-    <TextView
-        android:id="@+id/text_view_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:padding="16dp"
 
-        android:text="My Posts"
-        android:textColor="@color/purple_500"
-        android:textSize="38sp" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/recycler_view"/>
 
     <ListView
         android:id="@+id/my_places_list"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
         android:padding="16dp" />
 
 </LinearLayout>
