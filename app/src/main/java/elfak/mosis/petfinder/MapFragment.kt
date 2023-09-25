@@ -60,6 +60,11 @@ class MapFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+
+
+
         var context = activity?.applicationContext;
         Configuration.getInstance().load(context,PreferenceManager.getDefaultSharedPreferences(context!!))
         map = binding.osmMapView

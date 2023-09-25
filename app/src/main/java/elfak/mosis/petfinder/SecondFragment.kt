@@ -1,8 +1,11 @@
 package elfak.mosis.petfinder
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.*
 import android.widget.*
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
@@ -59,15 +62,20 @@ class SecondFragment : Fragment() {
             android.R.layout.simple_list_item_1,
             myPetViewModel.NewPosts
         )
-        myPetsList.setOnItemClickListener { adapterView, view, i, l ->
-            var myPet = adapterView?.adapter?.getItem(i) as NewPost
-            myPetViewModel.selected = myPet
-            view.findNavController().navigate(R.id.action_SecondFragment_to_EditFragment)
+//        myPetsList.setOnItemClickListener { adapterView, view, i, l ->
+//            var myPet = adapterView?.adapter?.getItem(i) as NewPost
+//            myPetViewModel.selected = myPet
+//            view.findNavController().navigate(R.id.action_SecondFragment_to_EditFragment)
+//        }
+
+        myPetsList.setOnItemClickListener { parent, view, position, id ->
+            view.findNavController().navigate(R.id.action_SecondFragment_to_MapFragment)
         }
 
         radioGroup.setOnCheckedChangeListener { _, checkedId ->
             updateViewForRadioButton()
         }
+
     }
 
     private fun updateViewForRadioButton() {
@@ -141,6 +149,7 @@ class SecondFragment : Fragment() {
         val item=menu.findItem(R.id.action_my_places_list)
         item.isVisible=false;
     }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
