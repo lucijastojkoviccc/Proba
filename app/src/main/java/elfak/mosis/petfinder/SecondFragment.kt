@@ -53,7 +53,7 @@ class SecondFragment : Fragment() {
 
         updateViewForRadioButton()
 
-        myPetViewModel.NewPosts.add(NewPost("", "", "", "", "", "", "", "", "",false))
+        myPetViewModel.NewPosts.add(NewPost("", "", "", "", "", "", "", "", "","",false))
         myPetsList.adapter = ArrayAdapter<NewPost>(
             view.context,
             android.R.layout.simple_list_item_1,
@@ -86,7 +86,7 @@ class SecondFragment : Fragment() {
 
                         }
                         if (petList.isEmpty()) {
-                            //Toast.makeText(requireContext(), "My List is empty", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(requireContext(), "My List is empty", Toast.LENGTH_SHORT).show()
                         } else {
                             myPetsList.adapter = ArrayAdapter<NewPost>(
                                 requireContext(),
@@ -105,7 +105,6 @@ class SecondFragment : Fragment() {
                     for (document in documents) {
                         val pet = document.toObject(NewPost::class.java)
                         petList.add(pet)
-                        Toast.makeText(requireContext(), petList.size.toString(), Toast.LENGTH_SHORT).show()
                     }
                     if (petList.isEmpty()) {
                         Toast.makeText(requireContext(), "The List is empty", Toast.LENGTH_SHORT).show()

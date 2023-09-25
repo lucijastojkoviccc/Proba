@@ -232,7 +232,7 @@ class RegisterFragment : Fragment()
 
     private fun uploadImageToFirebaseStorage() {
         val file = Uri.fromFile(File(currentPhotoPath))
-        val imageRef = storageRef.child("images/users/${file.lastPathSegment}")
+        val imageRef = storageRef.child("users/${file.lastPathSegment}")
 
         val uploadTask = imageRef.putFile(file)
 
