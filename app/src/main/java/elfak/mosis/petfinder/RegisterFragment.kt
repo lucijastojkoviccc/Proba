@@ -19,6 +19,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.FileProvider
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
@@ -65,8 +66,8 @@ class RegisterFragment : Fragment()
             var email = binding.editTextRegisterEmail.text.toString()
             var pass = binding.editTextRegisterPassword.text.toString()
             var phone=binding.editTextRegisterPhone.text.toString()
-            emailZaSliku=email
-            register(name, email, pass, 1,phone)
+                       register(name, email, pass, 1,phone)
+
         }
 
         binding.editTextRegisterName.addTextChangedListener(object : TextWatcher
@@ -204,6 +205,15 @@ class RegisterFragment : Fragment()
                         Firebase.firestore
                         .collection("users").document(Firebase.auth.currentUser!!.uid)
                         .set(korisnik)
+                    val bitmapDrawable = binding.pic.drawable as? BitmapDrawable
+                    val pic: ByteArray? = bitmapDrawable?.bitmap?.let { bitmap ->
+                        val byteArrayOutputStream = ByteArrayOutputStream()
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
+                        byteArrayOutputStream.toByteArray()
+                    }
+                    Firebase.storage.getReference("users/${Firebase.auth.currentUser!!.uid}.jpg").putBytes(pic!!).addOnSuccessListener {
+                        Log.d("Mata", "ete gu")
+                    }
                  }
                 else {
                          Firebase.firestore
@@ -236,8 +246,10 @@ class RegisterFragment : Fragment()
 
         val uploadTask = imageRef.putFile(file)
 
+
+
         uploadTask.addOnSuccessListener {
-            Toast.makeText(requireContext(), "Image uploaded to Firebase Storage", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(requireContext(), "Image uploaded to Firebase Storage", Toast.LENGTH_SHORT).show()
 
             // Now, you can retrieve the download URL if needed
             imageRef.downloadUrl.addOnSuccessListener { uri ->
@@ -252,9 +264,12 @@ class RegisterFragment : Fragment()
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-            uploadImageToFirebaseStorage()
+            //uploadImageToFirebaseStorage()
             if (File(currentPhotoPath).exists()) {
-                uploadImageToFirebaseStorage()
+                var file = File(currentPhotoPath)
+
+                Glide.with(requireContext()).load(file).into(binding.pic)
+                //uploadImageToFirebaseStorage()
             } else {
                 // Handle the case where no photo was taken
                 Toast.makeText(requireContext(), "No photo taken", Toast.LENGTH_SHORT).show()

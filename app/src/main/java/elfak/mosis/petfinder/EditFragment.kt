@@ -29,9 +29,11 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import elfak.mosis.petfinder.data.NewPost
 import elfak.mosis.petfinder.databinding.FragmentEditBinding
 import elfak.mosis.petfinder.model.LocationViewModel
 import elfak.mosis.petfinder.model.NewPostViewModel
@@ -48,26 +50,12 @@ class EditFragment : Fragment() {
     private val REQUEST_IMAGE_CAPTURE = 1;
     private var formCheck:BooleanArray = BooleanArray(6)
     private var pictureSet = false
-    private lateinit var kliknutID: String
+    public lateinit var kliknutID: String
+    lateinit var petName:String
+    lateinit var ownerId:String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setFragmentResultListener("requestKey") { key, bundle ->
-            val result = bundle.getString("data")
-            kliknutID = result.toString()
-        }
-
-        Firebase.firestore.collection("pets").whereEqualTo("petID", kliknutID).get().addOnSuccessListener {
-            for(document in it)// znam da ce da bude samo jedan dokument jer saljem ID
-            {
-                if(document["ownerID"]!=Firebase.auth.currentUser!!.uid)
-                {
-                    binding.editmypetFinishedButton.visibility= View.GONE
-                    binding.editmypetSelectPictureButton.visibility=View.GONE
-
-                }
-            }
-        }
     }
 
     override fun onCreateView(
@@ -79,24 +67,51 @@ class EditFragment : Fragment() {
         if (myPetViewModel.selected == null)
             (activity as AppCompatActivity).supportActionBar?.title = "Add my pet"
         binding= FragmentEditBinding.inflate(inflater, container, false)
+
+        kliknutID = arguments!!.getString("newpostId").toString()
+        //Log.d("Mata","Paris"+kliknutID)
+        Firebase.firestore.collection("pets").document(kliknutID).get().addOnSuccessListener {document ->
+
+                if(document["ownerID"]!=Firebase.auth.currentUser!!.uid)
+                {
+                    binding.editmypetFinishedButton.visibility= View.GONE
+                    binding.editmypetSelectPictureButton.visibility=View.GONE
+
+                }
+            Log.d("Mata",document["type"].toString())
+
+                binding.editmypetTypeEdit.setText(document["type"].toString())
+                binding.editmypetBreedEdit.setText(document["breed"]?.toString())
+                binding.editmypetColorEdit.setText(document["color"]?.toString())
+                binding.editmypetNameEdit.setText(document["name"]?.toString())
+                binding.editmypetDescEdit.setText(document["description"]?.toString())
+
+                Log.d("Lulu",document["type"].toString())
+                Log.d("Lulu",document["postedID"].toString())
+                petName=document["name"].toString()
+                ownerId=document["postedID"].toString()
+
+        }
+
         return binding.root
     }
     private fun fillData()
     {
         //get ako nema internera ce da pokupi iz kesa podatke
         var id = Firebase.auth.currentUser!!.uid   ///////////////// ovde treba da stavim da budu informacije odredjenog ljubimca, nevezano za usera
-        Firebase.firestore.collection("pets").document(kliknutID).get().addOnSuccessListener {
+        Firebase.firestore.collection("pets").document().get().addOnSuccessListener {
            binding.editmypetTypeEdit.setText(it["type"].toString())
             binding.editmypetBreedEdit.setText(it["breed"]?.toString())
             binding.editmypetColorEdit.setText(it["color"]?.toString())
             binding.editmypetNameEdit.setText(it["name"]?.toString())
             binding.editmypetDescEdit.setText(it["description"]?.toString())
+
         }
 
         if (checkInternetConnection())
         {
-            //slika ljubimca ne tog nekog usera
-            Firebase.storage.getReference("petPic/$id.jpg").downloadUrl.addOnSuccessListener { uri->
+            //ovde je potrebno da sakupim postedId i ime ljubimca "pets/${ownerId}${petName}.jpg"
+            Firebase.storage.getReference("users/${id}.jpg").downloadUrl.addOnSuccessListener { uri->
                 Glide.with(requireContext()).load(uri).into(binding.editmypetPicture)
                 pictureSet=true
                 adjustPadding()

@@ -19,6 +19,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -218,8 +220,18 @@ class AddPetFragment : Fragment() {
             "description" to description,
             "longitude" to longitude,
             "latitude" to latitude,
-            "lost" to lost
+            "lost" to lost,
+            "comments" to arrayListOf<String>()
         )
+
+        //povecavanje broja poena trenutno ulogovanom korisniku (on je dodao post)
+        var id=Firebase.auth.currentUser!!.uid
+        val db = FirebaseFirestore.getInstance()
+        val docRef = db.collection("users").document(id)
+        docRef.update("points", FieldValue.increment(10))
+            .addOnSuccessListener {
+                Log.d("probam", "Points updated successfully. ")
+            }
 
         Firebase.firestore
             .collection("pets")
@@ -232,38 +244,19 @@ class AddPetFragment : Fragment() {
                 ).show()
                 val storageRef = Firebase.storage.reference
                 val file = Uri.fromFile(File(currentPhotoPath))
-                val imageRef = storageRef.child("pets/${file.lastPathSegment}")
+                val imageRef = storageRef.child("pets/${id}${name}.jpg")
 
                 val uploadTask = imageRef.putFile(file)
 
                 uploadTask.addOnSuccessListener {
-                    Toast.makeText(
-                        requireContext(),
-                        "Image uploaded to Firebase Storage",
-                        Toast.LENGTH_SHORT
-                    ).show()
+
                     // Now, you can retrieve the download URL if needed
                     imageRef.downloadUrl.addOnSuccessListener { uri ->
                         val imageUrl = uri.toString()
-                        // Do something with the imageUrl (e.g., save it to Firestore)
 
-                        // You can update the Firestore document with the image URL
                         documentReference.update("picture", imageUrl)
                     }
-                }.addOnFailureListener { exception ->
-                    Toast.makeText(
-                        requireContext(),
-                        "Error uploading image: ${exception.message}",
-                        Toast.LENGTH_SHORT
-                    ).show()
                 }
-            }
-            .addOnFailureListener { e ->
-                Toast.makeText(
-                    requireContext(),
-                    "Error adding pet: $e",
-                    Toast.LENGTH_SHORT
-                ).show()
             }
     }
 

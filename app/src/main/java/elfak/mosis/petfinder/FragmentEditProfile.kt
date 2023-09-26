@@ -55,20 +55,8 @@ class FragmentEditProfile : Fragment()
     private var hasExistingPhoto: Boolean = false
     override fun onResume() {
         super.onResume()
+              (activity as DrawerLocker?)!!.setDrawerEnabled(true)
 
-            val title: TextView = requireActivity().findViewById(R.id.toolbar_title)
-            val navigation: NavigationView = requireActivity().findViewById(R.id.nav_view)
-            (activity as DrawerLocker?)!!.setDrawerEnabled(true)
-        if (Firebase.auth.currentUser?.uid?.isNotEmpty() == true) {
-            val id = Firebase.auth.currentUser!!.uid
-            Firebase.storage.getReference("profilePics/$id.jpg").downloadUrl.addOnSuccessListener { uri ->
-                Glide.with(requireContext()).load(uri).into(binding.profileImage)
-                binding.imgUser.isVisible = false
-                hasExistingPhoto = true // Set the flag to true
-            }.addOnFailureListener {
-                hasExistingPhoto = false // Set the flag to false if photo doesn't exist
-            }
-        }
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
@@ -89,7 +77,7 @@ class FragmentEditProfile : Fragment()
 
         if (checkInternetConnection())
         {
-            Firebase.storage.getReference("profilePics/$id.jpg").downloadUrl.addOnSuccessListener { uri->
+            Firebase.storage.getReference("users/$id.jpg").downloadUrl.addOnSuccessListener { uri->
                 Glide.with(requireContext()).load(uri).into(binding.profileImage)
                 binding.imgUser.isVisible = false
             }
@@ -136,7 +124,7 @@ class FragmentEditProfile : Fragment()
 
             val navigation: NavigationView = requireActivity().findViewById(R.id.nav_view)
             val headerLayout: View = navigation.getHeaderView(0)
-            val image: ImageView = headerLayout.findViewById(R.id.imgUser)
+            val image: ImageView = binding.profileImage
             if (image != null) {
                 currentPhotoPath?.let {
                     Glide.with(requireContext()).load(Uri.fromFile(File(it))).into(image)
@@ -200,7 +188,9 @@ class FragmentEditProfile : Fragment()
                 .collection("users")
                 .document(id)
                 .update(newDoc)
+            Firebase.storage.getReference("users/${Firebase.auth.currentUser!!.uid}.jpg").putBytes(pic!!)
         }
+
     }
 
 //    private fun enableEdit()
@@ -282,18 +272,10 @@ class FragmentEditProfile : Fragment()
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             var file = File(currentPhotoPath)
             Glide.with(requireContext()).load(file).into(binding.profileImage)
-            Glide.with(requireContext()).load(file).into(binding.profileImage)
+
             formCheck[0] = true
         }
-        // Check if there was an existing photo, if yes, delete it from Firebase Storage
-        if (hasExistingPhoto) {
-            val id = Firebase.auth.currentUser!!.uid
-            Firebase.storage.getReference("profilePics/$id.jpg").delete()
-        }
 
-        // Upload the new photo to Firebase Storage
-        val id = Firebase.auth.currentUser!!.uid
-        Firebase.storage.getReference("profilePics/$id.jpg").putFile(Uri.fromFile(File(currentPhotoPath)))
     }
 
     private fun verifyStoragePermissions()

@@ -123,6 +123,10 @@
             android:id="@+id/action_MapFragment_to_fragmentEditProfile"
             app:destination="@id/fragmentEditProfile"
             />
+        <action
+            android:id="@+id/action_MapFragment_to_AddPetFragment"
+            app:destination="@id/AddPetFragment"
+            />
     </fragment>
     <fragment
         android:id="@+id/UsersFragment"

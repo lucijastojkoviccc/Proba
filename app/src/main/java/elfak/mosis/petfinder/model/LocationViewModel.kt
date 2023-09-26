@@ -21,7 +21,7 @@ class LocationViewModel: ViewModel() {
     private var nizNewPosts:ArrayList<NewPost> = ArrayList()
 
     private var _nizNewPosts=MutableLiveData<ArrayList<NewPost>>()
-    val liveNizSalona:LiveData<ArrayList<NewPost>>
+    val liveNP:LiveData<ArrayList<NewPost>>
         get()=_nizNewPosts;
 
     private val _longitude = MutableLiveData<String>("")
@@ -33,12 +33,20 @@ class LocationViewModel: ViewModel() {
         get() = _latitude
 
     var setLocation:Boolean = false
+    var oneLocation:Boolean=false
 
     fun setLocation(lon: String, lat: String)
     {
         _longitude.value = lon
         _latitude.value = lat
-        setLocation = false
+        setLocation = true
+    }
+    fun setOneLocation(lon: String, lat: String)
+    {
+        _longitude.value = lon
+        _latitude.value = lat
+        setLocation = true
+        oneLocation=true
     }
     fun getLocation(): LocationData {
         return LocationData(_longitude.value ?: "", _latitude.value ?: "")
@@ -53,28 +61,29 @@ class LocationViewModel: ViewModel() {
     {
         return nizNewPosts;
     }
-//    fun ucitajNewPostsURadijusu(  ) {
-//
-//        val db = FirebaseFirestore.getInstance()
-//        val collectionRef = db.collection("pets")
-//
-//
-//        collectionRef.get()
-//            .addOnSuccessListener { result ->
-//                if (!result.isEmpty) {
-//                    val nizNewPosts = ArrayList<NewPost>()
-//
-//                    for (document in result) {
-//                        val newPost = document.toObject(NewPost::class.java)
-//                        nizNewPosts.add(newPost)
-//                    }
-//
-//                    _nizNewPosts.postValue(nizNewPosts)
-//                }
-//            }
-//    }
+
+    fun ucitajNewPostsURadijusu(  ) {
+
+        val db = FirebaseFirestore.getInstance()
+        val collectionRef = db.collection("pets")
+
+
+        collectionRef.get()
+            .addOnSuccessListener { result ->
+                if (!result.isEmpty) {
+                    val nizNewPosts = ArrayList<NewPost>()
+
+                    for (document in result) {
+                        val newPost = document.toObject(NewPost::class.java)
+                        nizNewPosts.add(newPost)
+                    }
+
+                    _nizNewPosts.postValue(nizNewPosts)
+                }
+            }
+    }
 
     init {
-        //ucitajNewPostsURadijusu();
+        ucitajNewPostsURadijusu();
     }
 }

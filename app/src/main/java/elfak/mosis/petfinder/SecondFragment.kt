@@ -3,6 +3,7 @@ package elfak.mosis.petfinder
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.core.os.bundleOf
@@ -17,6 +18,7 @@ import com.google.firebase.ktx.Firebase
 import elfak.mosis.petfinder.data.NewPost
 import elfak.mosis.petfinder.data.PetListItem
 import elfak.mosis.petfinder.databinding.FragmentSecondBinding
+import elfak.mosis.petfinder.model.LocationViewModel
 import elfak.mosis.petfinder.model.NewPostViewModel
 import java.util.*
 import kotlin.collections.ArrayList
@@ -26,6 +28,7 @@ class SecondFragment : Fragment() {
     private var _binding: FragmentSecondBinding? = null
     private val binding get() = _binding!!
     private val myPetViewModel: NewPostViewModel by activityViewModels()
+    private  val myLoc:LocationViewModel by activityViewModels()
     private lateinit var myPetsList: ListView
     private lateinit var radioGroup: RadioGroup
     private lateinit var radioButtonMyPosts: RadioButton
@@ -56,19 +59,13 @@ class SecondFragment : Fragment() {
 
         updateViewForRadioButton()
 
-        myPetViewModel.NewPosts.add(NewPost("", "", "", "", "", "", "", "", "","",false))
-        myPetsList.adapter = ArrayAdapter<NewPost>(
-            view.context,
-            android.R.layout.simple_list_item_1,
-            myPetViewModel.NewPosts
-        )
-//        myPetsList.setOnItemClickListener { adapterView, view, i, l ->
-//            var myPet = adapterView?.adapter?.getItem(i) as NewPost
-//            myPetViewModel.selected = myPet
-//            view.findNavController().navigate(R.id.action_SecondFragment_to_EditFragment)
-//        }
+        myPetViewModel.NewPosts.add(NewPost("", "", "", "", "", "", "", "", "","",false, ArrayList()))
 
         myPetsList.setOnItemClickListener { parent, view, position, id ->
+            var myPet = myPetsList.adapter.getItem(position) as NewPost
+            Log.d("Mata",myPet.ID)
+            myLoc.setOneLocation(myPet.longitude, myPet.latitude)
+            myPetViewModel.selected=myPet
             view.findNavController().navigate(R.id.action_SecondFragment_to_MapFragment)
         }
 
@@ -81,6 +78,8 @@ class SecondFragment : Fragment() {
     private fun updateViewForRadioButton() {
         if (radioButtonMyPosts.isChecked) {
 
+            myPetsList.adapter=null
+
             val currentUserUid = Firebase.auth.currentUser?.uid
             if (currentUserUid != null) {
                 Firebase.firestore.collection("pets")
@@ -90,6 +89,7 @@ class SecondFragment : Fragment() {
                         val petList = ArrayList<NewPost>()
                         for (document in documents) {
                             val pet = document.toObject(NewPost::class.java)
+                            pet.ID = document.id
                             petList.add(pet)
 
                         }
@@ -105,6 +105,7 @@ class SecondFragment : Fragment() {
                     }
                            }
         } else if (radioButtonPublic.isChecked) {
+            myPetsList.adapter=null
 
             Firebase.firestore.collection("pets")
                 .get()
@@ -112,6 +113,8 @@ class SecondFragment : Fragment() {
                     val petList = ArrayList<NewPost>()
                     for (document in documents) {
                         val pet = document.toObject(NewPost::class.java)
+                        Log.d("Mata", "document.id")
+                        pet.ID = document.id
                         petList.add(pet)
                     }
                     if (petList.isEmpty()) {
