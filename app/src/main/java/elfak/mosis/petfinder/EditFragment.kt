@@ -86,39 +86,22 @@ class EditFragment : Fragment() {
                 binding.editmypetNameEdit.setText(document["name"]?.toString())
                 binding.editmypetDescEdit.setText(document["description"]?.toString())
 
-                Log.d("Lulu",document["type"].toString())
-                Log.d("Lulu",document["postedID"].toString())
                 petName=document["name"].toString()
                 ownerId=document["postedID"].toString()
 
-        }
+            if (checkInternetConnection())
+            {
+                //ovde je potrebno da sakupim postedId i ime ljubimca "pets/${ownerId}${petName}.jpg"
+                Firebase.storage.getReference("pets/${ownerId}${petName}.jpg").downloadUrl.addOnSuccessListener { uri->
+                    Glide.with(requireContext()).load(uri).into(binding.editmypetPicture)
+                    pictureSet=true
+                    adjustPadding()
+                }
 
-        return binding.root
-    }
-    private fun fillData()
-    {
-        //get ako nema internera ce da pokupi iz kesa podatke
-        var id = Firebase.auth.currentUser!!.uid   ///////////////// ovde treba da stavim da budu informacije odredjenog ljubimca, nevezano za usera
-        Firebase.firestore.collection("pets").document().get().addOnSuccessListener {
-           binding.editmypetTypeEdit.setText(it["type"].toString())
-            binding.editmypetBreedEdit.setText(it["breed"]?.toString())
-            binding.editmypetColorEdit.setText(it["color"]?.toString())
-            binding.editmypetNameEdit.setText(it["name"]?.toString())
-            binding.editmypetDescEdit.setText(it["description"]?.toString())
-
-        }
-
-        if (checkInternetConnection())
-        {
-            //ovde je potrebno da sakupim postedId i ime ljubimca "pets/${ownerId}${petName}.jpg"
-            Firebase.storage.getReference("users/${id}.jpg").downloadUrl.addOnSuccessListener { uri->
-                Glide.with(requireContext()).load(uri).into(binding.editmypetPicture)
-                pictureSet=true
-                adjustPadding()
             }
 
         }
-
+        return binding.root
     }
 
     private fun checkInternetConnection() : Boolean
@@ -152,7 +135,7 @@ class EditFragment : Fragment() {
         binding.editmypetCancelButton.setOnClickListener {
             findNavController().popBackStack()
         }
-        fillData()
+        //fillData()
         binding.editmypetFinishedButton.setOnClickListener{
 
             var type=binding.editmypetTypeEdit.text.toString()
