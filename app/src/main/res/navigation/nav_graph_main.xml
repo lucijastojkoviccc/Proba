@@ -70,6 +70,14 @@
             android:id="@+id/action_EditFragment_to_UsersFragment"
             app:destination="@id/UsersFragment"
             />
+        <action
+            android:id="@+id/action_EditFragment_to_AddReviewFragment"
+            app:destination="@id/AddReviewFragment"
+            />
+        <action
+            android:id="@+id/action_EditFragment_to_AllReviewsFragment"
+            app:destination="@id/AllReviewsFragment"
+            />
 
     </fragment>
 
@@ -80,10 +88,6 @@
         android:label="@string/second_fragment_label"
         tools:layout="@layout/fragment_second">
 
-<!--        <action-->
-<!--            android:id="@+id/action_SecondFragment_to_ViewFragment"-->
-<!--            app:destination="@id/ViewFragment"-->
-<!--            />-->
         <action
             android:id="@+id/action_SecondFragment_to_EditFragment"
             app:destination="@id/EditFragment"
@@ -152,4 +156,19 @@
         tools:layout="@layout/fragment_add_pet">
 
     </fragment>
+    <fragment
+        android:id="@+id/AddReviewFragment"
+        android:name="elfak.mosis.petfinder.AddReviewFragment"
+        android:label="AddReview"
+        tools:layout="@layout/fragment_add_review">
+
+    </fragment>
+    <fragment
+        android:id="@+id/AllReviewsFragment"
+        android:name="elfak.mosis.petfinder.AllReviewsFragment"
+        android:label="AllReviews"
+        tools:layout="@layout/fragment_all_reviews">
+
+    </fragment>
+
 </navigation>

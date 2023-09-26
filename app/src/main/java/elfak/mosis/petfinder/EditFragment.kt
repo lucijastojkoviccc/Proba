@@ -25,6 +25,7 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
@@ -135,7 +136,13 @@ class EditFragment : Fragment() {
         binding.editmypetCancelButton.setOnClickListener {
             findNavController().popBackStack()
         }
-        //fillData()
+        binding.addR.setOnClickListener {
+            view.findNavController().navigate(R.id.action_EditFragment_to_AddReviewFragment)
+        }
+        binding.allR.setOnClickListener {
+            view.findNavController().navigate(R.id.action_EditFragment_to_AllReviewsFragment)
+        }
+
         binding.editmypetFinishedButton.setOnClickListener{
 
             var type=binding.editmypetTypeEdit.text.toString()

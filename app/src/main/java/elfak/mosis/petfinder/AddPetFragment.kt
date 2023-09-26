@@ -75,6 +75,7 @@ class AddPetFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
         fillData()
         binding.editmypetFinishedButton.isEnabled = true
 
@@ -220,8 +221,7 @@ class AddPetFragment : Fragment() {
             "description" to description,
             "longitude" to longitude,
             "latitude" to latitude,
-            "lost" to lost,
-            "comments" to arrayListOf<String>()
+            "lost" to lost
         )
 
         //povecavanje broja poena trenutno ulogovanom korisniku (on je dodao post)

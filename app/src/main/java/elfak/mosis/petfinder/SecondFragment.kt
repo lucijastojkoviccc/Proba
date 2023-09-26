@@ -33,13 +33,13 @@ class SecondFragment : Fragment() {
     private lateinit var radioGroup: RadioGroup
     private lateinit var radioButtonMyPosts: RadioButton
     private lateinit var radioButtonPublic: RadioButton
-    private lateinit var textViewTitle: TextView
-    private lateinit var newRecyclerView: RecyclerView
-    private lateinit var newArrayList: ArrayList<PetListItem>
-    lateinit var imageId:Array<Int>
-    lateinit var heading: Array<String>
-    val calendar = Calendar.getInstance()
-    val customDate = calendar.time
+//    private lateinit var textViewTitle: TextView
+//    private lateinit var newRecyclerView: RecyclerView
+//    private lateinit var newArrayList: ArrayList<PetListItem>
+//    lateinit var imageId:Array<Int>
+//    lateinit var heading: Array<String>
+//    val calendar = Calendar.getInstance()
+//    val customDate = calendar.time
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -59,7 +59,7 @@ class SecondFragment : Fragment() {
 
         updateViewForRadioButton()
 
-        myPetViewModel.NewPosts.add(NewPost("", "", "", "", "", "", "", "", "","",false, ArrayList()))
+        myPetViewModel.NewPosts.add(NewPost("", "", "", "", "", "", "", "", "","",false ))
 
         myPetsList.setOnItemClickListener { parent, view, position, id ->
             var myPet = myPetsList.adapter.getItem(position) as NewPost
@@ -137,28 +137,28 @@ class SecondFragment : Fragment() {
         _binding = null
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId){
-            R.id.action_new_place->{
-                this.findNavController().navigate(R.id.action_SecondFragment_to_EditFragment)
-                true
-            }
-            else->super.onOptionsItemSelected(item)
-        }
-    }
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        return when (item.itemId){
+//            R.id.action_new_place->{
+//                this.findNavController().navigate(R.id.action_SecondFragment_to_EditFragment)
+//                true
+//            }
+//            else->super.onOptionsItemSelected(item)
+//        }
+//    }
 
-    override fun onPrepareOptionsMenu(menu: Menu) {
-        super.onPrepareOptionsMenu(menu)
-        val item=menu.findItem(R.id.action_my_places_list)
-        item.isVisible=false;
-    }
+//    override fun onPrepareOptionsMenu(menu: Menu) {
+//        super.onPrepareOptionsMenu(menu)
+//        val item=menu.findItem(R.id.action_my_places_list)
+//        item.isVisible=false;
+//    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_main, menu)
-    }
+//    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+//        inflater.inflate(R.menu.menu_main, menu)
+//    }
 }

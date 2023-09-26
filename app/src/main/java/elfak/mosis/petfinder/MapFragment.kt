@@ -116,7 +116,7 @@ class MapFragment : Fragment() {
 
         }
 
-        map.controller.setZoom(15.0)
+        map.controller.setZoom(8.0)
         val startPoint = GeoPoint(43.32472 ,21.90333)
         map.controller.setCenter(startPoint)
 
@@ -206,7 +206,7 @@ class MapFragment : Fragment() {
                 if (startPoint.distanceToAsDouble(endPoint) < 200) {
                     locationViewModel.setLocation(lon, lat)
                     findNavController().popBackStack();
-                    //findNavController().navigate(R.id.action_mapFragment_to_editFragment2);
+
                     return true
                 }
                 else
@@ -309,7 +309,7 @@ class MapFragment : Fragment() {
             map.invalidate()
         }
     }
-    // Funkcija za računanje udaljenosti između tačaka koristeći Haversine formulu
+
     fun calculateDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
         val R = 6371.0 // Earth's radius in kilometers
         val dLat = Math.toRadians(lat2 - lat1)
