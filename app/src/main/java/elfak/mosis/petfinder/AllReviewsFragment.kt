@@ -24,6 +24,7 @@ class AllReviewsFragment : Fragment() {
     private val binding get() = _binding!!
     private val newPostViewModel: NewPostViewModel by activityViewModels()
     private lateinit var rList: ListView
+    lateinit var stiglo:String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -34,41 +35,81 @@ class AllReviewsFragment : Fragment() {
     ): View? {
 
         _binding = FragmentAllReviewsBinding.inflate(inflater, container, false)
+
+//        stiglo=arguments!!.getString("newpostID").toString()
+//        Firebase.firestore.collection("reviews").whereEqualTo("postID", stiglo).get().addOnSuccessListener{ documents ->
+//            val reviewList = ArrayList<Review>()
+//            for (document in documents) {
+//
+//                val r = document.toObject(Review::class.java)
+//                r.ID=document.id
+//                reviewList.add(r)
+//            }
+//            if (reviewList.isEmpty()) {
+//                Toast.makeText(requireContext(), "No reviews", Toast.LENGTH_SHORT).show()
+//            } else {
+//                rList.adapter = ArrayAdapter<Review>(
+//                    requireContext(),
+//                    android.R.layout.simple_list_item_1,
+//                    reviewList
+//                )
+//            }
+//        }
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         rList = view.findViewById(R.id.listViewKomentari)
-        updateView()
-    }
+        //updateView()
+        stiglo=arguments!!.getString("newpost").toString()
+        Firebase.firestore.collection("reviews").whereEqualTo("postID", stiglo).get().addOnSuccessListener{ documents ->
+            val reviewList = ArrayList<Review>()
+            for (document in documents) {
 
-    private fun updateView() {
-        val neUmemDaPosaljem= "null"
-        rList.adapter = null
-        Firebase.firestore.collection("reviews")
-            .whereEqualTo("postID", "5jO7HKquz47IZcbzzSTU")
-            .get()
-            .addOnSuccessListener { documents ->
-                val reviewList = ArrayList<Review>()
-                for (document in documents) {
+                val r = document.toObject(Review::class.java)
+                r.ID=document.id
 
-                    val r = document.toObject(Review::class.java)
-                    r.ID=document.id
-                    reviewList.add(r)
-                }
-                if (reviewList.isEmpty()) {
-                    Toast.makeText(requireContext(), "No reviews", Toast.LENGTH_SHORT).show()
-                } else {
-                    rList.adapter = ArrayAdapter<Review>(
-                        requireContext(),
-                        android.R.layout.simple_list_item_1,
-                        reviewList
-                    )
-                }
+                reviewList.add(r)
             }
-
+            if (reviewList.isEmpty()) {
+                Toast.makeText(requireContext(), "No reviews", Toast.LENGTH_SHORT).show()
+            } else {
+                rList.adapter = ArrayAdapter<Review>(
+                    requireContext(),
+                    android.R.layout.simple_list_item_1,
+                    reviewList
+                )
+            }
+        }
     }
+
+//    private fun updateView() {
+//        val neUmemDaPosaljem= "null"
+//        rList.adapter = null
+//        Firebase.firestore.collection("reviews")
+//            .whereEqualTo("postID", "5jO7HKquz47IZcbzzSTU")
+//            .get()
+//            .addOnSuccessListener { documents ->
+//                val reviewList = ArrayList<Review>()
+//                for (document in documents) {
+//
+//                    val r = document.toObject(Review::class.java)
+//                    r.ID=document.id
+//                    reviewList.add(r)
+//                }
+//                if (reviewList.isEmpty()) {
+//                    Toast.makeText(requireContext(), "No reviews", Toast.LENGTH_SHORT).show()
+//                } else {
+//                    rList.adapter = ArrayAdapter<Review>(
+//                        requireContext(),
+//                        android.R.layout.simple_list_item_1,
+//                        reviewList
+//                    )
+//                }
+//            }
+//
+//    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

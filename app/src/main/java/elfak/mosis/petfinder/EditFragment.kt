@@ -51,7 +51,7 @@ class EditFragment : Fragment() {
     private val REQUEST_IMAGE_CAPTURE = 1
     private var formCheck:BooleanArray = BooleanArray(6)
     private var pictureSet = false
-    public lateinit var kliknutID: String
+    lateinit var kliknutID: String
     lateinit var petName:String
 
 
@@ -67,6 +67,7 @@ class EditFragment : Fragment() {
 
         if (myPetViewModel.selected == null)
             (activity as AppCompatActivity).supportActionBar?.title = "Add my pet"
+
         binding= FragmentEditBinding.inflate(inflater, container, false)
 
         kliknutID = arguments!!.getString("newpostId").toString()
@@ -136,12 +137,33 @@ class EditFragment : Fragment() {
         binding.editmypetCancelButton.setOnClickListener {
             findNavController().popBackStack()
         }
+        //ADD REVIEWS
         binding.addR.setOnClickListener {
-            view.findNavController().navigate(R.id.action_EditFragment_to_AddReviewFragment)
+            kliknutID = arguments!!.getString("newpostId").toString()
+            Firebase.firestore.collection("pets").document(kliknutID).get().addOnSuccessListener { document ->
+                   petName = document["petID"].toString()
+            }
+            val argsAll = Bundle()
+            argsAll.putString("newpost2", petName)
+            Log.d("Mataa", petName)
+            findNavController().navigate(R.id.action_EditFragment_to_AddReviewFragment, argsAll)
+            //view.findNavController().navigate(R.id.action_EditFragment_to_AddReviewFragment)
         }
+        //ALL REVIEWS
         binding.allR.setOnClickListener {
-            view.findNavController().navigate(R.id.action_EditFragment_to_AllReviewsFragment)
+            kliknutID = arguments!!.getString("newpostId").toString()
+            Firebase.firestore.collection("pets").document(kliknutID).get().addOnSuccessListener { document ->
+                petName = document["petID"].toString()
+            }
+            val argsAll = Bundle()
+            argsAll.putString("newpost", petName)
+            Log.d("Mataa", petName)
+            findNavController().navigate(R.id.action_EditFragment_to_AllReviewsFragment, argsAll)
+            //view.findNavController().navigate(R.id.action_EditFragment_to_AllReviewsFragment)
         }
+
+
+
 
         binding.editmypetFinishedButton.setOnClickListener{
 
