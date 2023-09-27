@@ -4,10 +4,12 @@ import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.icu.util.LocaleData
 import android.location.LocationManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.os.LocaleList
 import android.provider.MediaStore
 import android.util.Log
 import android.view.*
@@ -30,6 +32,8 @@ import elfak.mosis.petfinder.model.NewPostViewModel
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.ZoneId
 import java.util.*
 
 class AddPetFragment : Fragment() {
@@ -98,6 +102,8 @@ class AddPetFragment : Fragment() {
             val longitude = binding.editmypetLongitudeEdit.text.toString()
             val latitude = binding.editmypetLatitudeEdit.text.toString()
 
+            val date=System.currentTimeMillis()
+
             if (type.isNotEmpty() && breed.isNotEmpty() && color.isNotEmpty() && name.isNotEmpty()) {
                 addLostPet(
                     postedID,
@@ -108,7 +114,8 @@ class AddPetFragment : Fragment() {
                     description,
                     longitude,
                     latitude,
-                    lost
+                    lost,
+                    date
                 )
             } else {
                 Toast.makeText(
@@ -210,7 +217,8 @@ class AddPetFragment : Fragment() {
         description: String,
         longitude: String,
         latitude: String,
-        lost: Boolean
+        lost: Boolean,
+        date: Long
     ) {
         val newPet = hashMapOf(
             "postedID" to postedID,
@@ -221,7 +229,8 @@ class AddPetFragment : Fragment() {
             "description" to description,
             "longitude" to longitude,
             "latitude" to latitude,
-            "lost" to lost
+            "lost" to lost,
+            "date" to date
         )
 
         //povecavanje broja poena trenutno ulogovanom korisniku (on je dodao post)

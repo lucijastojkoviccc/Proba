@@ -7,7 +7,7 @@ class NewPostViewModel: ViewModel() {
     var NewPosts: ArrayList<NewPost> = ArrayList<NewPost>()
     var FilteredNewPosts: ArrayList<NewPost> = ArrayList<NewPost>()
     var NewPostsDatum: ArrayList<NewPost> = ArrayList<NewPost>()
-    var npType:ArrayList<NewPost> = ArrayList<NewPost>()
+    var NewPostsType:ArrayList<NewPost> = ArrayList<NewPost>()
     var IDNewPosts: String = ""
     var selected: NewPost?=null
 
@@ -54,11 +54,11 @@ class NewPostViewModel: ViewModel() {
     }
     fun addNPtype(newPost: NewPost)
     {
-        npType.add(newPost);
+        NewPostsType.add(newPost);
     }
 
     fun getNPtype ():ArrayList<NewPost>
     {
-        return npType;
+        return NewPostsType;
     }
 }

@@ -131,6 +131,10 @@
             android:id="@+id/action_MapFragment_to_AddPetFragment"
             app:destination="@id/AddPetFragment"
             />
+        <action
+            android:id="@+id/action_MapFragment_to_FilterFragment"
+            app:destination="@id/FilterFragment"
+            />
     </fragment>
     <fragment
         android:id="@+id/UsersFragment"
@@ -170,5 +174,27 @@
         tools:layout="@layout/fragment_all_reviews">
 
     </fragment>
+    <fragment
+        android:id="@+id/FilterFragment"
+        android:name="elfak.mosis.petfinder.FilterFragment"
+        android:label="FilterFragment"
+        tools:layout="@layout/fragment_filter">
+        <action
+            android:id="@+id/action_FilterFragment_to_FilterResFragment"
+            app:destination="@id/FilterResFragment"/>
+
+    </fragment>
+    <fragment
+        android:id="@+id/FilterResFragment"
+        android:name="elfak.mosis.petfinder.FilterResFragment"
+        android:label="FilterResFragment"
+        tools:layout="@layout/fragment_filter_res">
+        <action
+            android:id="@+id/action_FilterResFragment_to_MapFragment"
+            app:destination="@id/MapFragment"/>
+
+    </fragment>
+
+
 
 </navigation>

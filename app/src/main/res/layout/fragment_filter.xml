@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/light_lilac"
+    tools:context=".FilterFragment">
+
+    <!-- Radio Buttons in a Horizontal Layout -->
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center">
+
+        <RadioButton
+            android:id="@+id/author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:buttonTint="@color/purple_500"
+            android:layout_margin="6dp"
+            android:text="Author" />
+
+        <RadioButton
+            android:id="@+id/lf"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/purple_500"
+            android:layout_margin="6dp"
+            android:text="Lost/Found" />
+
+        <RadioButton
+            android:id="@+id/Date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/purple_500"
+            android:layout_margin="6dp"
+            android:text="Date" />
+    </RadioGroup>
+
+    <!-- Other Components Below Radio Buttons -->
+    <EditText
+        android:id="@+id/editTextFilter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="100dp"
+        android:layout_marginRight="100dp"
+        android:layout_marginBottom="30dp"
+        android:ems="10"
+        android:gravity="center"
+        android:hint="Type here..."
+        android:inputType="text" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <DatePicker
+            android:id="@+id/datePickerOd"
+            android:layout_width="0dp"
+            android:layout_height="350dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            style="@style/DatePickerStyle"
+            />
+
+        <DatePicker
+            android:id="@+id/datePickerDo"
+            android:layout_width="0dp"
+            android:layout_height="350dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            style="@style/DatePickerStyle"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/buttonF"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="140dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginRight="140dp"
+        android:layout_gravity="center_horizontal"
+        android:text="Filter" />
+</LinearLayout>

@@ -107,7 +107,7 @@ class MapFragment : Fragment() {
                         map.overlays.find { it is MyLocationNewOverlay } as MyLocationNewOverlay?
 
                     myLocationOverlay?.runOnFirstFix {
-                        ucitajFiltriraneNP(10.0, myLocationOverlay);
+                        ucitajFiltriraneNP(100.0, myLocationOverlay);
                     }
                 }
 
@@ -120,34 +120,39 @@ class MapFragment : Fragment() {
         val startPoint = GeoPoint(43.32472 ,21.90333)
         map.controller.setCenter(startPoint)
 
-        var dugmeSearch=view.findViewById<Button>(R.id.buttonSearch);
-        dugmeSearch.setOnClickListener()
-        {
-            var radijus=view.findViewById<EditText>(R.id.editTextText2).text.toString();
-
-            if(radijus.isNotEmpty()) {
-                radijusKM = radijus.toDouble();
-                ucitajSveNP(radijusKM);
-            }
-            else
+            var dugmeSearch=view.findViewById<Button>(R.id.buttonSearch);
+            dugmeSearch.setOnClickListener()
             {
-                Toast.makeText(context,"Set radius!",Toast.LENGTH_SHORT).show();
-            }
-        }
+                var radijus=view.findViewById<EditText>(R.id.editTextText2).text.toString();
 
-        var dugmePlus = view.findViewById<Button>(R.id.buttonDodaj);
-        dugmePlus.setOnClickListener()
-        {
-            val myLocationOverlay =
-                map.overlays.find { it is MyLocationNewOverlay } as MyLocationNewOverlay?
-            if (myLocationOverlay != null && myLocationOverlay.myLocation != null) {
-                val currentLocation = myLocationOverlay.myLocation
-                val latitude = currentLocation.latitude
-                val longitude = currentLocation.longitude
-                locationViewModel.setLocation(longitude.toString(), latitude.toString());
-                findNavController().navigate(R.id.action_MapFragment_to_AddPetFragment);
+                if(radijus.isNotEmpty()) {
+                    radijusKM = radijus.toDouble();
+                    ucitajSveNP(radijusKM);
+                }
+                else
+                {
+                    Toast.makeText(context,"Set radius!",Toast.LENGTH_SHORT).show();
+                }
             }
-        }
+
+            var dugmeAdd = view.findViewById<Button>(R.id.buttonDodaj);
+            dugmeAdd.setOnClickListener()
+            {
+                val myLocationOverlay =
+                    map.overlays.find { it is MyLocationNewOverlay } as MyLocationNewOverlay?
+                if (myLocationOverlay != null && myLocationOverlay.myLocation != null) {
+                    val currentLocation = myLocationOverlay.myLocation
+                    val latitude = currentLocation.latitude
+                    val longitude = currentLocation.longitude
+                    locationViewModel.setLocation(longitude.toString(), latitude.toString());
+                    findNavController().navigate(R.id.action_MapFragment_to_AddPetFragment);
+                }
+            }
+            var dugmeFilter = view.findViewById<Button>(R.id.buttonFilter)
+            dugmeFilter.setOnClickListener {
+                findNavController().navigate(R.id.action_MapFragment_to_FilterFragment)
+            }
+
         }
 
     }

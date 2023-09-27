@@ -28,4 +28,10 @@
         <item name="cornerSize">10dp</item>
         <item name="color">@color/purple_500</item>
     </style>
+
+    <style name="DatePickerStyle" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">@color/white</item> <!-- Change to the color you want -->
+        <item name="android:textColorPrimary">@color/purple_700</item> <!-- Change to the color you want -->
+    </style>
+
 </resources>

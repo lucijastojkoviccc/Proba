@@ -59,7 +59,8 @@ class SecondFragment : Fragment() {
 
         updateViewForRadioButton()
 
-        myPetViewModel.NewPosts.add(NewPost("", "", "", "", "", "", "", "", "","",false ))
+        val datumKreiranja = System.currentTimeMillis();
+        myPetViewModel.NewPosts.add(NewPost("", "", "", "", "", "", "", "", "","",false,datumKreiranja))
 
         myPetsList.setOnItemClickListener { parent, view, position, id ->
             var myPet = myPetsList.adapter.getItem(position) as NewPost

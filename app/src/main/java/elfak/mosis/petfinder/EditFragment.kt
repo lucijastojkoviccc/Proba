@@ -98,8 +98,8 @@ class EditFragment : Fragment() {
                     pictureSet=true
                     adjustPadding()
                 }
-
             }
+
 
         }
         return binding.root
