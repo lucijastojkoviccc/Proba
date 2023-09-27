@@ -17,12 +17,12 @@ import org.osmdroid.views.overlay.Marker
 class LocationViewModel: ViewModel() {
 
 
-    var markeri:ArrayList<Marker> = ArrayList();
+    var markeri:ArrayList<Marker> = ArrayList()
     private var nizNewPosts:ArrayList<NewPost> = ArrayList()
 
     private var _nizNewPosts=MutableLiveData<ArrayList<NewPost>>()
     val liveNP:LiveData<ArrayList<NewPost>>
-        get()=_nizNewPosts;
+        get()=_nizNewPosts
 
     private val _longitude = MutableLiveData<String>("")
     val longitude: LiveData<String>
@@ -52,14 +52,14 @@ class LocationViewModel: ViewModel() {
         return LocationData(_longitude.value ?: "", _latitude.value ?: "")
 
     }
-    fun setFrizerskiSaloni(saloni:ArrayList<NewPost>)
+    fun setNewPosts(posts:ArrayList<NewPost>)
     {
-        nizNewPosts=saloni;
+        nizNewPosts=posts
     }
 
-    fun getfrizerskiSaloni() : ArrayList<NewPost>
+    fun getNewPosts() : ArrayList<NewPost>
     {
-        return nizNewPosts;
+        return nizNewPosts
     }
 
     fun ucitajNewPostsURadijusu(  ) {
@@ -84,6 +84,6 @@ class LocationViewModel: ViewModel() {
     }
 
     init {
-        ucitajNewPostsURadijusu();
+        ucitajNewPostsURadijusu()
     }
 }

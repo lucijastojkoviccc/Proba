@@ -49,7 +49,7 @@ class FragmentEditProfile : Fragment()
 
     private lateinit var binding: FragmentEditProfileBinding
     private lateinit var dobijeniID: String
-    private val REQUEST_IMAGE_CAPTURE = 1;
+    private val REQUEST_IMAGE_CAPTURE = 1
     private var selectedImageUri: Uri? = null
     private var formCheck:BooleanArray = BooleanArray(4)
     private var hasExistingPhoto: Boolean = false

@@ -59,6 +59,6 @@ class NewPostViewModel: ViewModel() {
 
     fun getNPtype ():ArrayList<NewPost>
     {
-        return NewPostsType;
+        return NewPostsType
     }
 }

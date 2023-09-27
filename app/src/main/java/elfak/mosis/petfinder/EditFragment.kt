@@ -48,12 +48,12 @@ class EditFragment : Fragment() {
 //    private val binding get() = _binding!!
     private val myPetViewModel: NewPostViewModel by activityViewModels()
     private val locationViewModel: LocationViewModel by activityViewModels()
-    private val REQUEST_IMAGE_CAPTURE = 1;
+    private val REQUEST_IMAGE_CAPTURE = 1
     private var formCheck:BooleanArray = BooleanArray(6)
     private var pictureSet = false
     public lateinit var kliknutID: String
     lateinit var petName:String
-    lateinit var ownerId:String
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,13 +87,13 @@ class EditFragment : Fragment() {
                 binding.editmypetNameEdit.setText(document["name"]?.toString())
                 binding.editmypetDescEdit.setText(document["description"]?.toString())
 
-                petName=document["name"].toString()
-                ownerId=document["postedID"].toString()
+                petName=document["petID"].toString()
+
 
             if (checkInternetConnection())
             {
                 //ovde je potrebno da sakupim postedId i ime ljubimca "pets/${ownerId}${petName}.jpg"
-                Firebase.storage.getReference("pets/${ownerId}${petName}.jpg").downloadUrl.addOnSuccessListener { uri->
+                Firebase.storage.getReference("pets/${petName}.jpg").downloadUrl.addOnSuccessListener { uri->
                     Glide.with(requireContext()).load(uri).into(binding.editmypetPicture)
                     pictureSet=true
                     adjustPadding()
@@ -292,7 +292,7 @@ class EditFragment : Fragment() {
         }
         catch (e:Exception)
         {
-            Log.d("CampingApp", "Error while trying to launch camera - " + e.message)
+            Log.d("PetFinder", "Error while trying to launch camera - " + e.message)
             Toast.makeText(requireContext(), R.string.error, Toast.LENGTH_SHORT).show()
         }
     }
@@ -325,8 +325,8 @@ class EditFragment : Fragment() {
             Glide.with(requireContext()).load(file).into(binding.editmypetPicture)
             //binding.profileImagePlaceholder.setImageDrawable(null)
             formCheck[0] = true
-            pictureSet=true;
-            adjustPadding();
+            pictureSet=true
+            adjustPadding()
             enableEdit()
         }
     }

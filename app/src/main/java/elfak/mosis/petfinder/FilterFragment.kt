@@ -35,10 +35,10 @@ class FilterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        filtriraj();
+        filtriraj()
     }
     private fun filtriraj() {
-        val buttonFilter = requireView().findViewById<Button>(R.id.buttonF);
+        val buttonFilter = requireView().findViewById<Button>(R.id.buttonF)
         buttonFilter.setOnClickListener {
             val radioG=requireView().findViewById<RadioGroup>(R.id.radioGroup)
             val selectedId=radioG.checkedRadioButtonId
@@ -68,7 +68,7 @@ class FilterFragment : Fragment() {
                     }
                     else
                     {
-                        Toast.makeText(context,"Username not inserted",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context,"Username not inserted",Toast.LENGTH_SHORT).show()
                     }
 
                 }
@@ -82,7 +82,7 @@ class FilterFragment : Fragment() {
                     }
                     else
                     {
-                        Toast.makeText(context,"Lost/Found",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context,"Lost/Found",Toast.LENGTH_SHORT).show()
                     }
                 }
                 R.id.Date->
@@ -113,7 +113,7 @@ class FilterFragment : Fragment() {
                     }
                     else
                     {
-                        Toast.makeText(context,"Choose dates!",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context,"Choose dates!",Toast.LENGTH_SHORT).show()
                     }
 
                 }

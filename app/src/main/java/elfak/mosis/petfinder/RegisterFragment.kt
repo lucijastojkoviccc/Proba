@@ -39,7 +39,7 @@ class RegisterFragment : Fragment()
     private var nameEntered = false
     private var emailEntered = false
     private var passEntered = false
-    private val REQUEST_IMAGE_CAPTURE = 1;
+    private val REQUEST_IMAGE_CAPTURE = 1
     private val storage = Firebase.storage
     private val storageRef = storage.reference
     lateinit var emailZaSliku:String

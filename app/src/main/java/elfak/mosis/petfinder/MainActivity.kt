@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var mDrawer: DrawerLayout
     private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var binding: ActivityMainBinding
-    private val shareViewModel : SharedViewHome by viewModels()
+
 
     fun loadData(id: String) {
         var name: String = ""
@@ -262,7 +262,7 @@ override fun onNavigationItemSelected(item: MenuItem): Boolean
     {
         val lockMode = if (enabled) DrawerLayout.LOCK_MODE_UNLOCKED else DrawerLayout.LOCK_MODE_LOCKED_CLOSED
         mDrawer.setDrawerLockMode(lockMode)
-        toggle.setDrawerIndicatorEnabled(enabled);
+        toggle.setDrawerIndicatorEnabled(enabled)
 
 
     }

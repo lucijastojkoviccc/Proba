@@ -21,7 +21,7 @@ import elfak.mosis.petfinder.data.User
 class UsersFragment : Fragment() {
 
 
-    var sviKorisnici:ArrayList<User> = ArrayList();
+    var sviKorisnici:ArrayList<User> = ArrayList()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }

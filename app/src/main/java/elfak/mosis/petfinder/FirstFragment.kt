@@ -35,7 +35,7 @@ import java.util.*
 class FirstFragment : Fragment() {
 
     private lateinit var binding: FragmentFirstBinding
-    private val REQUEST_IMAGE_CAPTURE = 1;
+    private val REQUEST_IMAGE_CAPTURE = 1
 
     private val cameraPermissionRequest =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->

@@ -30,23 +30,23 @@ class FilterResFragment : Fragment() {
 
         val view = inflater.inflate(R.layout.fragment_filter_res, container, false)
 
-        var dugme = view.findViewById<Button>(R.id.buttonFF);
+        var dugme = view.findViewById<Button>(R.id.buttonFF)
         dugme.setOnClickListener {
-            findNavController().navigate(R.id.action_FilterResFragment_to_MapFragment);
+            findNavController().navigate(R.id.action_FilterResFragment_to_MapFragment)
         }
-        return view;
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val listView: ListView = view.findViewById(R.id.listviewFFS);
+        val listView: ListView = view.findViewById(R.id.listviewFFS)
         val filteredNP = FilteredNP.getFilteredPosts()
         val npType = FilteredNP.getNPtype()
         val npDate = FilteredNP.vratiNewPostsDatum()
 
 
-        lateinit var adapter: ArrayAdapter<NewPost>;
+        lateinit var adapter: ArrayAdapter<NewPost>
 
 
         if (filteredNP.isNotEmpty()) {
@@ -83,7 +83,7 @@ class FilterResFragment : Fragment() {
                 position: Int,
                 id: Long
             ) {
-                var kliknutObjekat: NewPost = parent?.adapter?.getItem(position) as NewPost;
+                var kliknutObjekat: NewPost = parent?.adapter?.getItem(position) as NewPost
             }
         })
     }

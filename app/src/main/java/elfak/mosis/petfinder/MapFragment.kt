@@ -54,9 +54,9 @@ class MapFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        var context = activity?.applicationContext;
+        var context = activity?.applicationContext
         Configuration.getInstance().load(context,PreferenceManager.getDefaultSharedPreferences(context!!))
-        map = requireView().findViewById<MapView>(R.id.map);
+        map = requireView().findViewById<MapView>(R.id.map)
         map.setMultiTouchControls(true)
 
         if (ActivityCompat.checkSelfPermission(
@@ -76,7 +76,7 @@ class MapFragment : Fragment() {
             if(locationViewModel.oneLocation==true)
             {
                 map.overlays.clear()
-                map.invalidate();
+                map.invalidate()
                 var tmpPost:NewPost=newPost.selected!!
                 tmpPost.latitude=locationViewModel.latitude.value!!
                 tmpPost.longitude=locationViewModel.longitude.value!!
@@ -89,9 +89,9 @@ class MapFragment : Fragment() {
 
 
             setMyLocationOverlay()
-            setOnMapClickOveralay();
+            setOnMapClickOveralay()
             val nizObserver= Observer<ArrayList<NewPost>> { newValue ->
-                nizNPosts = newValue;
+                nizNPosts = newValue
 
 
                 if (newPost.getFilteredPosts().isEmpty() &&
@@ -107,12 +107,12 @@ class MapFragment : Fragment() {
                         map.overlays.find { it is MyLocationNewOverlay } as MyLocationNewOverlay?
 
                     myLocationOverlay?.runOnFirstFix {
-                        ucitajFiltriraneNP(100.0, myLocationOverlay);
+                        ucitajFiltriraneNP(100.0, myLocationOverlay)
                     }
                 }
 
             }
-            locationViewModel.liveNP.observe(viewLifecycleOwner, nizObserver);
+            locationViewModel.liveNP.observe(viewLifecycleOwner, nizObserver)
 
         }
 
@@ -120,22 +120,22 @@ class MapFragment : Fragment() {
         val startPoint = GeoPoint(43.32472 ,21.90333)
         map.controller.setCenter(startPoint)
 
-            var dugmeSearch=view.findViewById<Button>(R.id.buttonSearch);
+            var dugmeSearch=view.findViewById<Button>(R.id.buttonSearch)
             dugmeSearch.setOnClickListener()
             {
-                var radijus=view.findViewById<EditText>(R.id.editTextText2).text.toString();
+                var radijus=view.findViewById<EditText>(R.id.editTextText2).text.toString()
 
                 if(radijus.isNotEmpty()) {
-                    radijusKM = radijus.toDouble();
-                    ucitajSveNP(radijusKM);
+                    radijusKM = radijus.toDouble()
+                    ucitajSveNP(radijusKM)
                 }
                 else
                 {
-                    Toast.makeText(context,"Set radius!",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context,"Set radius!",Toast.LENGTH_SHORT).show()
                 }
             }
 
-            var dugmeAdd = view.findViewById<Button>(R.id.buttonDodaj);
+            var dugmeAdd = view.findViewById<Button>(R.id.buttonDodaj)
             dugmeAdd.setOnClickListener()
             {
                 val myLocationOverlay =
@@ -144,8 +144,8 @@ class MapFragment : Fragment() {
                     val currentLocation = myLocationOverlay.myLocation
                     val latitude = currentLocation.latitude
                     val longitude = currentLocation.longitude
-                    locationViewModel.setLocation(longitude.toString(), latitude.toString());
-                    findNavController().navigate(R.id.action_MapFragment_to_AddPetFragment);
+                    locationViewModel.setLocation(longitude.toString(), latitude.toString())
+                    findNavController().navigate(R.id.action_MapFragment_to_AddPetFragment)
                 }
             }
             var dugmeFilter = view.findViewById<Button>(R.id.buttonFilter)
@@ -160,11 +160,11 @@ class MapFragment : Fragment() {
 
         if(newPost.getFilteredPosts().isNotEmpty())
         {
-            filterNPosts=newPost.getFilteredPosts();
+            filterNPosts=newPost.getFilteredPosts()
         }
         else
         {
-            filterNPosts=newPost.vratiNewPostsDatum();
+            filterNPosts=newPost.vratiNewPostsDatum()
         }
         if (myLocationOverlay != null && myLocationOverlay.lastFix != null) {
 
@@ -173,10 +173,10 @@ class MapFragment : Fragment() {
             val longitude = currentLocation.longitude.toDouble()
             for(marker in locationViewModel.markeri )
             {
-                map.overlays.remove(marker);
+                map.overlays.remove(marker)
             }
-            locationViewModel.markeri.clear();
-            map.invalidate();
+            locationViewModel.markeri.clear()
+            map.invalidate()
             for (jedanObjekat in filterNPosts) {
                 if (jedanObjekat != null) {
                     val npLatitude = jedanObjekat.latitude.toDouble()
@@ -194,11 +194,11 @@ class MapFragment : Fragment() {
     private fun setOnMapClickOveralay() {
         var receive = object : MapEventsReceiver {
             override fun singleTapConfirmedHelper(p: GeoPoint?): Boolean {
-                var lon = p?.longitude.toString();
-                var lat = p?.latitude.toString();
+                var lon = p?.longitude.toString()
+                var lat = p?.latitude.toString()
 
-                var latitudeCurrent = 0.0;
-                var longitudeCurrent = 0.0;
+                var latitudeCurrent = 0.0
+                var longitudeCurrent = 0.0
                 val myLocationOverlay =
                     map.overlays.find { it is MyLocationNewOverlay } as MyLocationNewOverlay?
                 if (myLocationOverlay != null && myLocationOverlay.myLocation != null) {
@@ -206,26 +206,26 @@ class MapFragment : Fragment() {
                     latitudeCurrent = currentLocation.latitude
                     longitudeCurrent = currentLocation.longitude
                 }
-                var startPoint = GeoPoint(latitudeCurrent, longitudeCurrent);
-                var endPoint = GeoPoint(p!!.latitude, p!!.longitude);
+                var startPoint = GeoPoint(latitudeCurrent, longitudeCurrent)
+                var endPoint = GeoPoint(p!!.latitude, p!!.longitude)
                 if (startPoint.distanceToAsDouble(endPoint) < 200) {
                     locationViewModel.setLocation(lon, lat)
-                    findNavController().popBackStack();
+                    findNavController().popBackStack()
 
                     return true
                 }
                 else
                 {
-                    Toast.makeText(context,"Destination out of reach",Toast.LENGTH_SHORT).show();
-                    return false;
+                    Toast.makeText(context,"Destination out of reach",Toast.LENGTH_SHORT).show()
+                    return false
                 }
             }
             override fun longPressHelper(p: GeoPoint?): Boolean {
-                return false;
+                return false
             }
         }
-        var overlayEvents = MapEventsOverlay(receive);
-        map.overlays.add(overlayEvents);
+        var overlayEvents = MapEventsOverlay(receive)
+        map.overlays.add(overlayEvents)
     }
 
     private fun setMyLocationOverlay() {
@@ -247,7 +247,7 @@ class MapFragment : Fragment() {
             map.overlays.find { it is MyLocationNewOverlay } as MyLocationNewOverlay?
 
         myLocationOverlay?.runOnFirstFix {
-            ucitajNPURadijusu(radijus, myLocationOverlay);
+            ucitajNPURadijusu(radijus, myLocationOverlay)
         }
 
     }
@@ -261,7 +261,7 @@ class MapFragment : Fragment() {
             marker.title = np.toString()
             Log.d("Mata","oce" )
 
-            locationViewModel.markeri.add(marker);
+            locationViewModel.markeri.add(marker)
             marker.setOnMarkerClickListener { marker, mapView ->
                 val args = Bundle()
                 args.putString("newpostId", np.ID)
@@ -285,9 +285,9 @@ class MapFragment : Fragment() {
 
             for(marker in locationViewModel.markeri )
             {
-                map.overlays.remove(marker);
+                map.overlays.remove(marker)
             }
-            locationViewModel.markeri.clear();
+            locationViewModel.markeri.clear()
 
 
             for (jedanObjekat in nizNPosts) {
@@ -326,11 +326,11 @@ class MapFragment : Fragment() {
         return R * c
     }
     override fun onDestroyView() {
-        newPost.getFilteredPosts().clear();
-        newPost.vratiNewPostsDatum().clear();
+        newPost.getFilteredPosts().clear()
+        newPost.vratiNewPostsDatum().clear()
 
         locationViewModel.oneLocation=false
-        locationViewModel.markeri.clear();
+        locationViewModel.markeri.clear()
         super.onDestroyView()
     }
     override fun onResume()

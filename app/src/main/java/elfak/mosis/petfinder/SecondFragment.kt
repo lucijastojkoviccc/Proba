@@ -16,7 +16,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import elfak.mosis.petfinder.data.NewPost
-import elfak.mosis.petfinder.data.PetListItem
+
 import elfak.mosis.petfinder.databinding.FragmentSecondBinding
 import elfak.mosis.petfinder.model.LocationViewModel
 import elfak.mosis.petfinder.model.NewPostViewModel
@@ -59,8 +59,8 @@ class SecondFragment : Fragment() {
 
         updateViewForRadioButton()
 
-        val datumKreiranja = System.currentTimeMillis();
-        myPetViewModel.NewPosts.add(NewPost("", "", "", "", "", "", "", "", "","",false,datumKreiranja))
+        val datumKreiranja = System.currentTimeMillis()
+        myPetViewModel.NewPosts.add(NewPost("", "", "", "", "", "", "", "", "","",false,datumKreiranja,""))
 
         myPetsList.setOnItemClickListener { parent, view, position, id ->
             var myPet = myPetsList.adapter.getItem(position) as NewPost
@@ -151,7 +151,7 @@ class SecondFragment : Fragment() {
 //    override fun onPrepareOptionsMenu(menu: Menu) {
 //        super.onPrepareOptionsMenu(menu)
 //        val item=menu.findItem(R.id.action_my_places_list)
-//        item.isVisible=false;
+//        item.isVisible=false
 //    }
 
 
