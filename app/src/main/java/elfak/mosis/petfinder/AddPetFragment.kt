@@ -43,16 +43,16 @@ import java.util.*
 
 class AddPetFragment : Fragment() {
 
-    // Initialize Firestore and Storage
+
     private val db = FirebaseFirestore.getInstance()
     private val storage = FirebaseStorage.getInstance()
     private val storageRef = storage.reference
     private var pictureSet = false
 
-    // Define the image file path
+
     private var currentPhotoPath: String? = null
 
-    // Define UI elements
+
     private lateinit var typeEditText: EditText
     private lateinit var breedEditText: EditText
     private lateinit var colorEditText: EditText
@@ -256,7 +256,7 @@ class AddPetFragment : Fragment() {
             imageRef.downloadUrl.addOnSuccessListener { uri ->
                 // Create a new pet object
                 val newPet = hashMapOf(
-                    "postedID" to postedID, // Assuming you have a postedID variable
+                    "postedID" to postedID,
                     "type" to type,
                     "breed" to breed,
                     "color" to color,

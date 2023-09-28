@@ -70,16 +70,12 @@ class EditFragment : Fragment() {
 
         binding= FragmentEditBinding.inflate(inflater, container, false)
 
+        binding.editmypetFinishedButton.visibility= View.GONE
+        binding.editmypetSelectPictureButton.visibility=View.GONE
         kliknutID = arguments!!.getString("newpostId").toString()
         //Log.d("Mata","Paris"+kliknutID)
         Firebase.firestore.collection("pets").document(kliknutID).get().addOnSuccessListener {document ->
 
-                if(document["ownerID"]!=Firebase.auth.currentUser!!.uid)
-                {
-                    binding.editmypetFinishedButton.visibility= View.GONE
-                    binding.editmypetSelectPictureButton.visibility=View.GONE
-
-                }
             Log.d("Mata",document["type"].toString())
 
                 binding.editmypetTypeEdit.setText(document["type"].toString())
@@ -260,15 +256,15 @@ class EditFragment : Fragment() {
                 .collection("pets")
                 .document(id)
                 .update(newDoc)
-
-            Firebase.storage
-                .getReference("petPic/$id.jpg")
-                .putFile(Uri.fromFile(File(currentPhotoPath)))
+//
+//            Firebase.storage
+//                .getReference("petPic/$id.jpg")
+//                .putFile(Uri.fromFile(File(currentPhotoPath)))
         }
     }
     private fun enableEdit()
     {
-        if(formCheck.all { it })
+        if(formCheck.any{ it })
         {
            //binding.button.setBackgroundResource(R.drawable.et_button_shape_green)
             binding.editmypetFinishedButton.isEnabled = true
