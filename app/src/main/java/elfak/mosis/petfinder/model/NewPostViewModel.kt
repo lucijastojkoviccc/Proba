@@ -13,15 +13,6 @@ class NewPostViewModel: ViewModel() {
 
 
     var postComments: ArrayList<String> = ArrayList<String>()
-    fun addComment(comm:String)
-    {
-        postComments.add(comm)
-    }
-    fun getAllComments():ArrayList<String>
-    {
-        return postComments
-    }
-
 
     public fun addPet(pet: NewPost) {
         NewPosts.add(pet)

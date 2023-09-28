@@ -1,6 +1,7 @@
 package elfak.mosis.petfinder
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -64,10 +65,14 @@ class FilterFragment : Fragment() {
                                 {
                                     val newP = document.toObject(NewPost::class.java)
                                     FilteredNP.addFilteredPost(newP)
+                                    Log.d("Luka" , "Moze2")
                                 }
+                                findNavController().navigate(R.id.action_FilterFragment_to_FilterResFragment)
                             }
+
                         }
-                        findNavController().navigate(R.id.action_FilterFragment_to_FilterResFragment)
+                        Log.d("Luka" , "Moze")
+//                        findNavController().navigate(R.id.action_FilterFragment_to_FilterResFragment)
                     }
                     else
                     {
@@ -89,8 +94,9 @@ class FilterFragment : Fragment() {
                                 val newP = document.toObject(NewPost::class.java)
                                 FilteredNP.addNPtype(newP)
                             }
+                            findNavController().navigate(R.id.action_FilterFragment_to_FilterResFragment)
                         }
-                        findNavController().navigate(R.id.action_FilterFragment_to_FilterResFragment)
+
                     }
                     else
                     {

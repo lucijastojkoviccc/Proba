@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="My Posts"
-            android:checked="true"
+
             android:buttonTint="@color/purple_500"/>
 
         <RadioButton
@@ -30,6 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Public"
+            android:checked="true"
             android:buttonTint="@color/purple_500"/>
     </RadioGroup>
 

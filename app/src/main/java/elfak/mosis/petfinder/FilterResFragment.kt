@@ -1,6 +1,7 @@
 package elfak.mosis.petfinder
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -17,7 +18,7 @@ import elfak.mosis.petfinder.model.NewPostViewModel
 
 class FilterResFragment : Fragment() {
 
-    private val FilteredNP: NewPostViewModel by activityViewModels()
+    private val xFilteredNP: NewPostViewModel by activityViewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -40,20 +41,24 @@ class FilterResFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val listView: ListView = view.findViewById(R.id.listviewFFS)
-        val filteredNP = FilteredNP.getFilteredPosts()
-        val npType = FilteredNP.getNPtype()
-        val npDate = FilteredNP.vratiNewPostsDatum()
+        val listView: ListView = view.findViewById(R.id.listviewFF)
+        val filteredNP = xFilteredNP.getFilteredPosts()
+        val npType = xFilteredNP.getNPtype()
+        val npDate = xFilteredNP.vratiNewPostsDatum()
 
 
         lateinit var adapter: ArrayAdapter<NewPost>
 
 
+
+        Log.d("Luka", filteredNP.size.toString())
+
         if (filteredNP.isNotEmpty()) {
-            adapter = ArrayAdapter(
+                  adapter = ArrayAdapter(
                 requireContext(),
                 android.R.layout.simple_list_item_1,
-                filteredNP
+                      filteredNP
+
             )
             listView.adapter = adapter
         }
@@ -76,16 +81,18 @@ class FilterResFragment : Fragment() {
             listView.adapter = adapter
         }
 
-        listView.setOnItemClickListener(object : AdapterView.OnItemClickListener {
-            override fun onItemClick(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                var kliknutObjekat: NewPost = parent?.adapter?.getItem(position) as NewPost
-            }
-        })
+//        listView.setOnItemClickListener(object : AdapterView.OnItemClickListener {
+//            override fun onItemClick(
+//                parent: AdapterView<*>?,
+//                view: View?,
+//                position: Int,
+//                id: Long
+//            ) {
+//                var kliknutObjekat: NewPost = parent?.adapter?.getItem(position) as NewPost
+//            }
+//        })
     }
+
+
 }
 

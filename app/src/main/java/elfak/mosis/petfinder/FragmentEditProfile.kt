@@ -78,7 +78,7 @@ class FragmentEditProfile : Fragment()
         if (checkInternetConnection())
         {
             Firebase.storage.getReference("users/$id.jpg").downloadUrl.addOnSuccessListener { uri->
-                Glide.with(requireContext()).load(uri).into(binding.profileImage)
+              Glide.with(requireContext()).load(uri).into(binding.profileImage)
                 binding.imgUser.isVisible = false
             }
 
@@ -101,11 +101,6 @@ class FragmentEditProfile : Fragment()
             //enableEdit()
         }
 
-        val btnText = binding.textViewTakePicture
-        btnText.setOnClickListener{
-            dispatchTakePictureIntent()
-            //enableEdit()
-        }
 
 
         binding.button.setOnClickListener {
@@ -125,7 +120,7 @@ class FragmentEditProfile : Fragment()
             val navigation: NavigationView = requireActivity().findViewById(R.id.nav_view)
             val headerLayout: View = navigation.getHeaderView(0)
             val image: ImageView = binding.profileImage
-            if (image != null) {
+            if (image != null && formCheck[0]) {
                 currentPhotoPath?.let {
                     Glide.with(requireContext()).load(Uri.fromFile(File(it))).into(image)
                 }
@@ -188,7 +183,8 @@ class FragmentEditProfile : Fragment()
                 .collection("users")
                 .document(id)
                 .update(newDoc)
-            Firebase.storage.getReference("users/${Firebase.auth.currentUser!!.uid}.jpg").putBytes(pic!!)
+            if (formCheck[0])
+                Firebase.storage.getReference("users/${Firebase.auth.currentUser!!.uid}.jpg").putBytes(pic!!)
         }
 
     }

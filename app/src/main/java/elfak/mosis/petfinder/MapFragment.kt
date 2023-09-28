@@ -46,6 +46,9 @@ class MapFragment : Fragment() {
     private val locationViewModel:LocationViewModel by activityViewModels()
     var radijusKM=1.0
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
         binding = FragmentMapBinding.inflate(layoutInflater)
@@ -58,6 +61,7 @@ class MapFragment : Fragment() {
         Configuration.getInstance().load(context,PreferenceManager.getDefaultSharedPreferences(context!!))
         map = requireView().findViewById<MapView>(R.id.map)
         map.setMultiTouchControls(true)
+
 
         if (ActivityCompat.checkSelfPermission(
                 requireActivity(),
@@ -73,6 +77,7 @@ class MapFragment : Fragment() {
             )
         }
         else {
+
             if(locationViewModel.oneLocation==true)
             {
                 map.overlays.clear()
@@ -84,39 +89,36 @@ class MapFragment : Fragment() {
                 Log.d("Mata",tmpPost.name)
                 createMarker(tmpPost)
             }
-            else
-            {
+
+            else {
+                setMyLocationOverlay()
+                setOnMapClickOveralay()
+                val nizObserver = Observer<ArrayList<NewPost>> { newValue ->
+                    nizNPosts = newValue
 
 
-            setMyLocationOverlay()
-            setOnMapClickOveralay()
-            val nizObserver= Observer<ArrayList<NewPost>> { newValue ->
-                nizNPosts = newValue
+                    if (newPost.getFilteredPosts().isEmpty() &&
+                        newPost.vratiNewPostsDatum().isEmpty() &&
+                        newPost.getNPtype().isEmpty()
+                    ) {
+                        ucitajSveNP(1.0)
+                    } else {
 
+                        val myLocationOverlay =
+                            map.overlays.find { it is MyLocationNewOverlay } as MyLocationNewOverlay?
 
-                if (newPost.getFilteredPosts().isEmpty() &&
-                    newPost.vratiNewPostsDatum().isEmpty() &&
-                    newPost.getNPtype().isEmpty()
-                )
-                {
-                    ucitajSveNP(10.0)
-                }
-                else {
-
-                    val myLocationOverlay =
-                        map.overlays.find { it is MyLocationNewOverlay } as MyLocationNewOverlay?
-
-                    myLocationOverlay?.runOnFirstFix {
-                        ucitajFiltriraneNP(100.0, myLocationOverlay)
+                        myLocationOverlay?.runOnFirstFix {
+                            ucitajFiltriraneNP(1000.0, myLocationOverlay)
+                        }
                     }
-                }
 
+                }
+                locationViewModel.liveNP.observe(viewLifecycleOwner, nizObserver)
             }
-            locationViewModel.liveNP.observe(viewLifecycleOwner, nizObserver)
 
         }
 
-        map.controller.setZoom(8.0)
+        map.controller.setZoom(10.0)
         val startPoint = GeoPoint(43.32472 ,21.90333)
         map.controller.setCenter(startPoint)
 
@@ -155,16 +157,20 @@ class MapFragment : Fragment() {
 
         }
 
-    }
+
     private fun ucitajFiltriraneNP(radijusKilometri: Double, myLocationOverlay:MyLocationNewOverlay) {
 
         if(newPost.getFilteredPosts().isNotEmpty())
         {
             filterNPosts=newPost.getFilteredPosts()
         }
-        else
+        else if (newPost.vratiNewPostsDatum().isNotEmpty())
         {
             filterNPosts=newPost.vratiNewPostsDatum()
+        }
+        else
+        {
+            filterNPosts=newPost.getNPtype()
         }
         if (myLocationOverlay != null && myLocationOverlay.lastFix != null) {
 
