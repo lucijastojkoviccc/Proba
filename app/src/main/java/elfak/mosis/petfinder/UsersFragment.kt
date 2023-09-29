@@ -17,11 +17,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import elfak.mosis.petfinder.data.User
+import elfak.mosis.petfinder.databinding.FragmentSecondBinding
+import elfak.mosis.petfinder.databinding.FragmentUsersBinding
 
 class UsersFragment : Fragment() {
 
 
     var sviKorisnici:ArrayList<User> = ArrayList()
+    lateinit var listaKorisnika: ListView
+    private var _binding: FragmentUsersBinding? = null
+    private val binding get() = _binding!!
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -29,7 +34,6 @@ class UsersFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_users, container, false)
     }
 
@@ -45,13 +49,20 @@ class UsersFragment : Fragment() {
                 sortUsers(users)
             }
         }
+
     }
 
     private fun sortUsers(users: List<User>) {
         val sortedUsers = users.sortedByDescending { it.Points }
-        val listaKorisnika: ListView = requireView().findViewById(R.id.listViewKorisnici)
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, sortedUsers.map { it.prikaziKoirniske() })
-        listaKorisnika.adapter = adapter
+        if(view!=null)
+        {
+            val listaKorisnika: ListView = view!!.findViewById(R.id.listViewKorisnici)
+            val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, sortedUsers.map { it.prikaziKoirniske() })
+            listaKorisnika.adapter = adapter
+        }
+        else {}
+
     }
+
 
 }

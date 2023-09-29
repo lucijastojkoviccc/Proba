@@ -30,6 +30,7 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
@@ -269,6 +270,13 @@ class AddPetFragment : Fragment() {
                     "imageUrl" to uri.toString(),
                     "petID" to petID   // da mogu lepo da sakupim sliku preko njega
                 )
+                var id=Firebase.auth.currentUser!!.uid
+                val db = FirebaseFirestore.getInstance()
+                val docRef = db.collection("users").document(id)
+                docRef.update("points", FieldValue.increment(10))
+                    .addOnSuccessListener {
+                        Log.d("probam", "Points updated successfully. ")
+                    }
 
 
                 db.collection("pets")

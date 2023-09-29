@@ -19,6 +19,6 @@ data class User(var ID:String,
     }
     fun prikaziKoirniske():String
     {
-        return " Name: $Name\n Username: $Email\n Points: $Points"
+        return " Name: $Name Username: $Email Points: $Points"
     }
 }
