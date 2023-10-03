@@ -92,7 +92,7 @@ class AddPetFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_add_pet, container, false)
 
 
-        // Initialize UI elements
+
         typeEditText = view.findViewById(R.id.editmypet_type_edit)
         breedEditText = view.findViewById(R.id.editmypet_breed_edit)
         colorEditText = view.findViewById(R.id.editmypet_color_edit)
@@ -106,7 +106,7 @@ class AddPetFragment : Fragment() {
         val selectPictureButton: Button = view.findViewById(R.id.editmypet_select_picture_button)
         val finishedButton: Button = view.findViewById(R.id.editmypet_finished_button)
 
-        // Request permission when the button is clicked
+
         selectPictureButton.setOnClickListener {
             requestPermissionLauncher.launch(Manifest.permission.CAMERA)
         }
@@ -158,9 +158,9 @@ class AddPetFragment : Fragment() {
 
     private fun dispatchTakePictureIntent() {
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
-            // Ensure that there's a camera activity to handle the intent
+
             takePictureIntent.resolveActivity(requireActivity().packageManager)?.also {
-                // Create the File where the photo should go
+
                 val photoFile: File? = try {
                     createImageFile()
                 } catch (ex: IOException) {

@@ -87,42 +87,42 @@ class EditFragment : Fragment() {
                 petName=document["petID"].toString()
 
 
-            if (checkInternetConnection())
-            {
+            //if (checkInternetConnection())
+           // {
                 //ovde je potrebno da sakupim postedId i ime ljubimca "pets/${ownerId}${petName}.jpg"
                 Firebase.storage.getReference("pets/${petName}.jpg").downloadUrl.addOnSuccessListener { uri->
                     Glide.with(requireContext()).load(uri).into(binding.editmypetPicture)
                     pictureSet=true
                     adjustPadding()
                 }
-            }
+            //}
 
 
         }
         return binding.root
     }
 
-    private fun checkInternetConnection() : Boolean
-    {
-        var manager = requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        return manager.activeNetworkInfo?.isConnectedOrConnecting == true
-    }
+//    private fun checkInternetConnection() : Boolean
+//    {
+//        var manager = requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+//        return manager.activeNetworkInfo?.isConnectedOrConnecting == true
+//    }
 
-    private fun loadLocalPetPicture()
-    {
-        try
-        {
-            var putanja = Environment.getExternalStorageDirectory().toString()
-            var fajl = File(putanja, "PetImage")
-            var inputStream = FileInputStream(fajl)
-            binding.editmypetPicture.setImageBitmap(BitmapFactory.decodeStream(inputStream))
-            inputStream.close()
-        }
-        catch (e:Exception)
-        {
-            Log.d("PetFinder", e.message.toString())
-        }
-    }
+//    private fun loadLocalPetPicture()
+//    {
+//        try
+//        {
+//            var putanja = Environment.getExternalStorageDirectory().toString()
+//            var fajl = File(putanja, "PetImage")
+//            var inputStream = FileInputStream(fajl)
+//            binding.editmypetPicture.setImageBitmap(BitmapFactory.decodeStream(inputStream))
+//            inputStream.close()
+//        }
+//        catch (e:Exception)
+//        {
+//            Log.d("PetFinder", e.message.toString())
+//        }
+//    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -141,7 +141,7 @@ class EditFragment : Fragment() {
             }
             val argsAll = Bundle()
             argsAll.putString("newpost2", petName)
-            Log.d("Mataa", petName)
+            //Log.d("Mataa", petName)
             findNavController().navigate(R.id.action_EditFragment_to_AddReviewFragment, argsAll)
             //view.findNavController().navigate(R.id.action_EditFragment_to_AddReviewFragment)
         }
@@ -153,7 +153,7 @@ class EditFragment : Fragment() {
             }
             val argsAll = Bundle()
             argsAll.putString("newpost", petName)
-            Log.d("Mataa", petName)
+            //Log.d("Mataa", petName)
             findNavController().navigate(R.id.action_EditFragment_to_AllReviewsFragment, argsAll)
             //view.findNavController().navigate(R.id.action_EditFragment_to_AllReviewsFragment)
         }

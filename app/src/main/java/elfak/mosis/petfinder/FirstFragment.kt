@@ -125,9 +125,9 @@ override fun onResume() {
     {
 
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
-            // Ensure that there's a camera activity to handle the intent
+
             takePictureIntent.resolveActivity(requireContext().packageManager)?.also {
-                // Create the File where the photo should go
+
                 val photoFile: File? = try
                 {
                     createImageFile()
@@ -139,7 +139,7 @@ override fun onResume() {
 
                     null
                 }
-                // Continue only if the File was successfully created
+
                 photoFile?.also {
                     val photoURI: Uri = FileProvider.getUriForFile(
                         requireContext(),

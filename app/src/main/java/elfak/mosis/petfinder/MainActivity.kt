@@ -34,37 +34,37 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var binding: ActivityMainBinding
 
 
-    fun loadData(id: String) {
-        var name: String = ""
-        var email: String = ""
-        var description: String = ""
-        var points: Long = 1
-        var pets: ArrayList<String> = ArrayList()
-
-
-        var pribavljanjePodataka = Firebase.firestore.collection("users").document(id).get()
-
-
-        pribavljanjePodataka.addOnSuccessListener {
-            name = (it["name"].toString())
-            email = (it["email"].toString())
-            description = (it["description"].toString())
-            var tmp= it["points"]
-            if(tmp!=null)
-                points= tmp as Long
-
-            var lostPetsss = it["pets"]
-            if(lostPetsss!=null)
-            {
-               var lostPets= lostPetsss as ArrayList<String>
-                if(!lostPets.isEmpty())
-                    for (pet in lostPets) {
-                        pets.add(pet)
-                    }
-            }
-
-        }
-    }
+//    fun loadData(id: String) {
+//        var name: String = ""
+//        var email: String = ""
+//        var description: String = ""
+//        var points: Long = 1
+//        var pets: ArrayList<String> = ArrayList()
+//
+//
+//        var pribavljanjePodataka = Firebase.firestore.collection("users").document(id).get()
+//
+//
+//        pribavljanjePodataka.addOnSuccessListener {
+//            name = (it["name"].toString())
+//            email = (it["email"].toString())
+//            description = (it["description"].toString())
+//            var tmp= it["points"]
+//            if(tmp!=null)
+//                points= tmp as Long
+//
+//            var lostPetsss = it["pets"]
+//            if(lostPetsss!=null)
+//            {
+//               var lostPets= lostPetsss as ArrayList<String>
+//                if(!lostPets.isEmpty())
+//                    for (pet in lostPets) {
+//                        pets.add(pet)
+//                    }
+//            }
+//
+//        }
+//    }
 
 
 
@@ -100,7 +100,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if(user!=null)
         {
             var userID = Firebase.auth.currentUser!!.uid
-            loadData(userID)
+            //loadData(userID)
         }
 
 
@@ -232,7 +232,7 @@ override fun onNavigationItemSelected(item: MenuItem): Boolean
                     if (p1 == DialogInterface.BUTTON_POSITIVE)
                     {
                         Firebase.auth.signOut()
-                        //pogasiSVE()
+
                         var i = Intent(this, ActivityLogin::class.java)
                         startActivity(i)
                     }
@@ -246,17 +246,6 @@ override fun onNavigationItemSelected(item: MenuItem): Boolean
     return true
 }
 
-
-//    private fun pogasiSVE()
-//    {
-//        val intent = Intent(this, ServiceNotificationSpamFirestore::class.java)
-//        stopService(intent)
-//        val intent2 = Intent(this, ServicePushNotification::class.java)
-//        stopService(intent2)
-//        var i = Intent(this, ServiceSendLocation::class.java)
-//        stopService(i)
-//
-//    }
 
     override fun setDrawerEnabled(enabled: Boolean)
     {

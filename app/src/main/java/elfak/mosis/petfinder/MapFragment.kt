@@ -77,7 +77,7 @@ class MapFragment : Fragment() {
             )
         }
         else {
-
+            // da sakupim sta je to izabrano iz liste
             if(locationViewModel.oneLocation==true)
             {
                 map.overlays.clear()
@@ -92,7 +92,7 @@ class MapFragment : Fragment() {
 
             else {
                 setMyLocationOverlay()
-                setOnMapClickOveralay()
+                //setOnMapClickOveralay()
                 val nizObserver = Observer<ArrayList<NewPost>> { newValue ->
                     nizNPosts = newValue
 
@@ -197,42 +197,42 @@ class MapFragment : Fragment() {
             map.invalidate()
         }
     }
-    private fun setOnMapClickOveralay() {
-        var receive = object : MapEventsReceiver {
-            override fun singleTapConfirmedHelper(p: GeoPoint?): Boolean {
-                var lon = p?.longitude.toString()
-                var lat = p?.latitude.toString()
-
-                var latitudeCurrent = 0.0
-                var longitudeCurrent = 0.0
-                val myLocationOverlay =
-                    map.overlays.find { it is MyLocationNewOverlay } as MyLocationNewOverlay?
-                if (myLocationOverlay != null && myLocationOverlay.myLocation != null) {
-                    val currentLocation = myLocationOverlay.myLocation
-                    latitudeCurrent = currentLocation.latitude
-                    longitudeCurrent = currentLocation.longitude
-                }
-                var startPoint = GeoPoint(latitudeCurrent, longitudeCurrent)
-                var endPoint = GeoPoint(p!!.latitude, p!!.longitude)
-                if (startPoint.distanceToAsDouble(endPoint) < 200) {
-                    locationViewModel.setLocation(lon, lat)
-                    findNavController().popBackStack()
-
-                    return true
-                }
-                else
-                {
-                    Toast.makeText(context,"Destination out of reach",Toast.LENGTH_SHORT).show()
-                    return false
-                }
-            }
-            override fun longPressHelper(p: GeoPoint?): Boolean {
-                return false
-            }
-        }
-        var overlayEvents = MapEventsOverlay(receive)
-        map.overlays.add(overlayEvents)
-    }
+//    private fun setOnMapClickOveralay() {
+//        var receive = object : MapEventsReceiver {
+//            override fun singleTapConfirmedHelper(p: GeoPoint?): Boolean {
+//                var lon = p?.longitude.toString()
+//                var lat = p?.latitude.toString()
+//
+//                var latitudeCurrent = 0.0
+//                var longitudeCurrent = 0.0
+//                val myLocationOverlay =
+//                    map.overlays.find { it is MyLocationNewOverlay } as MyLocationNewOverlay?
+//                if (myLocationOverlay != null && myLocationOverlay.myLocation != null) {
+//                    val currentLocation = myLocationOverlay.myLocation
+//                    latitudeCurrent = currentLocation.latitude
+//                    longitudeCurrent = currentLocation.longitude
+//                }
+//                var startPoint = GeoPoint(latitudeCurrent, longitudeCurrent)
+//                var endPoint = GeoPoint(p!!.latitude, p!!.longitude)
+//                if (startPoint.distanceToAsDouble(endPoint) < 200) {
+//                    locationViewModel.setLocation(lon, lat)
+//                    findNavController().popBackStack()
+//
+//                    return true
+//                }
+//                else
+//                {
+//                    Toast.makeText(context,"Destination out of reach",Toast.LENGTH_SHORT).show()
+//                    return false
+//                }
+//            }
+//            override fun longPressHelper(p: GeoPoint?): Boolean {
+//                return false
+//            }
+//        }
+//        var overlayEvents = MapEventsOverlay(receive)
+//        map.overlays.add(overlayEvents)
+//    }
 
     private fun setMyLocationOverlay() {
         var myLocationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(activity), map)
@@ -244,7 +244,7 @@ class MapFragment : Fragment() {
     ) { isGranted: Boolean ->
         if (isGranted) {
             setMyLocationOverlay()
-            setOnMapClickOveralay()
+            //setOnMapClickOveralay()
         }
     }
     fun ucitajSveNP(radijus:Double) {
@@ -322,7 +322,7 @@ class MapFragment : Fragment() {
     }
 
     fun calculateDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
-        val R = 6371.0 // Earth's radius in kilometers
+        val R = 6371.0 // Earth's radius in km
         val dLat = Math.toRadians(lat2 - lat1)
         val dLon = Math.toRadians(lon2 - lon1)
         val a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +

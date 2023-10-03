@@ -64,7 +64,6 @@ class SecondFragment : Fragment() {
 
         myPetsList.setOnItemClickListener { parent, view, position, id ->
             var myPet = myPetsList.adapter.getItem(position) as NewPost
-            Log.d("Mata",myPet.ID)
             myLoc.setOneLocation(myPet.longitude, myPet.latitude)
             myPetViewModel.selected=myPet
             view.findNavController().navigate(R.id.action_SecondFragment_to_MapFragment)

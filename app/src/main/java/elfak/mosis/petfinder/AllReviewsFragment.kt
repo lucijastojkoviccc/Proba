@@ -35,26 +35,6 @@ class AllReviewsFragment : Fragment() {
     ): View? {
 
         _binding = FragmentAllReviewsBinding.inflate(inflater, container, false)
-
-//        stiglo=arguments!!.getString("newpostID").toString()
-//        Firebase.firestore.collection("reviews").whereEqualTo("postID", stiglo).get().addOnSuccessListener{ documents ->
-//            val reviewList = ArrayList<Review>()
-//            for (document in documents) {
-//
-//                val r = document.toObject(Review::class.java)
-//                r.ID=document.id
-//                reviewList.add(r)
-//            }
-//            if (reviewList.isEmpty()) {
-//                Toast.makeText(requireContext(), "No reviews", Toast.LENGTH_SHORT).show()
-//            } else {
-//                rList.adapter = ArrayAdapter<Review>(
-//                    requireContext(),
-//                    android.R.layout.simple_list_item_1,
-//                    reviewList
-//                )
-//            }
-//        }
         return binding.root
     }
 
@@ -84,32 +64,6 @@ class AllReviewsFragment : Fragment() {
         }
     }
 
-//    private fun updateView() {
-//        val neUmemDaPosaljem= "null"
-//        rList.adapter = null
-//        Firebase.firestore.collection("reviews")
-//            .whereEqualTo("postID", "5jO7HKquz47IZcbzzSTU")
-//            .get()
-//            .addOnSuccessListener { documents ->
-//                val reviewList = ArrayList<Review>()
-//                for (document in documents) {
-//
-//                    val r = document.toObject(Review::class.java)
-//                    r.ID=document.id
-//                    reviewList.add(r)
-//                }
-//                if (reviewList.isEmpty()) {
-//                    Toast.makeText(requireContext(), "No reviews", Toast.LENGTH_SHORT).show()
-//                } else {
-//                    rList.adapter = ArrayAdapter<Review>(
-//                        requireContext(),
-//                        android.R.layout.simple_list_item_1,
-//                        reviewList
-//                    )
-//                }
-//            }
-//
-//    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

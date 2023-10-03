@@ -122,8 +122,6 @@ class LoginFragment : Fragment()
 
                         loadData(userID)
                         gotoMainActivity()
-
-
                 }
                 else -> Toast.makeText(context, R.string.error, Toast.LENGTH_SHORT).show()
 
